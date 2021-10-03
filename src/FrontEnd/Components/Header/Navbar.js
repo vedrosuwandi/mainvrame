@@ -1,5 +1,5 @@
 import { Button } from 'react-bootstrap';
-import Logo from '../Assets/mainvrame.png'
+import Logo from '../../../Assets/mainvrame.png'
 
 import './Navbar.css';
 

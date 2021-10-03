@@ -1,8 +1,8 @@
-import Nav from '../Components/Navbar';
+import Nav from '../Components/Header/Navbar';
 import {Button} from 'react-bootstrap';
 import './Explore.css';
 
-import Footer from '../Components/Footer';
+import Footer from '../Components/Footer/Footer';
 
 
 const Explore = () => {

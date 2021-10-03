@@ -1,4 +1,4 @@
-import logo from '../Assets/mainvrame.png';
+import logo from '../../Assets/mainvrame.png';
 
 const Mainvrame_Academy = () => {
     return ( 

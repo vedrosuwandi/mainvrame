@@ -123,9 +123,9 @@ p{
 }
 
 /*change the height of the panel as the register tab pressed*/
-/* .small-container.right-panel-active .small-form-wrapper{
+.small-container.right-panel-active .small-form-wrapper{
     height: 70vh;
-} */
+}
 
 
 @media only screen and (max-width : 900px){

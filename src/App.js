@@ -1,9 +1,9 @@
 import './App.css';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import Explore from './Pages/Explore';
-import Forms from './Pages/Forms';
-import Home from './Pages/Home';
-import Academy from './Pages/Academy';
+import Explore from './FrontEnd/Pages/Explore';
+import Forms from './FrontEnd/Pages/Forms';
+import Home from './FrontEnd/Pages/Home';
+import Academy from './FrontEnd/Pages/Academy';
 
 function App() {
 

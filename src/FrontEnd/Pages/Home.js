@@ -2,10 +2,10 @@ import React from 'react'
 import{Link} from 'react-router-dom'
 import {Button } from 'react-bootstrap';
 
-import Construction from '../Assets/constructions.png';
+import Construction from '../../Assets/constructions.png';
 
 import './Home.css';
-import Footer from '../Components/Footer';
+import Footer from '../Components/Footer/Footer';
 
 
 const Home = () => {

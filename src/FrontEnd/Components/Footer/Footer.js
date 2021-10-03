@@ -1,8 +1,8 @@
-import Logo from '../Assets/mainvrame.png';
+import Logo from '../../../Assets/mainvrame.png'
 
-import CityInfo from '../Components/CityInfo';
-import CompanyInfo from '../Components/CompanyInfo';
-import SosMedInfo from '../Components/SosMedInfo';
+import CityInfo from './CityInfo';
+import CompanyInfo from './CompanyInfo';
+import SosMedInfo from './SosMedInfo';
 
 import './Footer.css';
 

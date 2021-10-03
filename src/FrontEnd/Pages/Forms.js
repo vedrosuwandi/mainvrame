@@ -1,6 +1,6 @@
 import React from 'react'
-import Login from '../Components/Login';
-import Register from '../Components/Register';
+import Login from '../Components/Forms/Login';
+import Register from '../Components/Forms/Register';
 
 import { useState } from 'react';
 
