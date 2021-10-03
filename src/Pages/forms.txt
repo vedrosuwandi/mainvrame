@@ -1,0 +1,187 @@
+
+.form-content{
+    display: flex;
+    background-color: aliceblue;   
+    justify-content: center;
+}
+
+.state-list li{
+    display:inline;
+}
+
+Button{
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	transition: transform 80ms ease-in;
+}
+
+
+Button:active{
+    /* The Button change its size slightly */
+    transform: scale(0.95);
+}
+
+/*The Button in state property*/
+Button.state-button{
+    background-color: #7225b9;
+    border-radius: 10px;
+    border-color: white;
+    
+}
+
+/* Change color when the cursor is pointed to the button in the state*/
+.state-button:hover{
+    background-color: #966FD6;
+    font-weight: bold;
+}
+
+
+
+#form-container{
+    position: absolute;
+    top: 0;
+    height: 100%;
+    transition: all 1s ease-in-out;
+
+}
+
+/*Login Form*/
+.login-container{
+    left: 0;
+	width: 50%;
+    /* z-index is to put the position of the component infront or behind */
+	z-index: 2;
+}
+
+/*Register Form*/
+.register-container{
+    left: 0;
+	width: 50%;
+	opacity: 0;
+	z-index: 1;
+}
+
+/*Container for state panel*/
+.state-container{
+    position: absolute;
+	top: 0;
+	left: 50%;
+	width: 50%;
+	height: 100%;
+	overflow: hidden;
+	transition: transform 1s ease-in-out;
+	z-index: 100;
+    /* border: 1px solid black; */
+}
+
+/*Container that consist of the background color that will move around*/
+.state-panel {
+    /*Background with Linear Transition*/
+	/* background: -webkit-linear-gradient(to right, #FF4B2B, #FF416C); */
+	background: linear-gradient(to right, #FFFCBB, #FADA5E);
+	background-repeat: no-repeat;
+	background-size: cover;
+	color: #966FD6;
+	position: relative;
+	left: -100%;
+	height: 100%;
+    /*The size has the same size as the main Container*/
+	width: 200%;
+    /*Put the position at 0 in X-axis */
+  	transform: translateX(0);
+	transition: transform 1s ease-in-out;
+    /* border: 2px solid blue; */
+}
+
+/*The state inside the state panel which consist of left and right*/
+#state{
+    position: absolute;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	/* padding: 0 40px; */
+    /* top: 0; */
+	text-align: center;
+    /*Set the height to the same height of the container and half width of the container*/
+	height: 100%;
+	width: 50%;
+    /*Place the text in point 0 at X-axis*/
+	/* transform: translateX(0); */
+	transition: transform 1s ease-in-out;
+    /* border: 1px solid black; */
+}
+
+/*Set the state panel to the right which is start from 0 in X-axis*/
+.state-panel-right {
+    /*Set the panel to the right*/
+	right: 0;
+	transform: translateX(0%);
+}
+
+/*To initiate the state panel left*/
+.state-panel-left {
+	transform: translateX(-20%);
+}
+
+/*Animation*/
+
+/*Move Sign In to the right*/
+.container.right-panel-active .login-container {
+	transform: translateX(100%);
+    opacity: 0;
+}
+
+
+/*Move State to the left*/
+.container.right-panel-active .state-container{
+    transform: translateX(-100%);
+}
+
+/*Makes Sign Up Appear and move it to the front*/
+.container.right-panel-active .register-container{
+    transform: translateX(100%);
+    opacity: 1;
+    z-index: 5;
+
+}
+
+/*Change state*/ /*Move the panel to the right*/
+.container.right-panel-active .state-panel{
+    transform: translateX(50%);
+}
+
+/*Move state-panel-right to zero when className right panel active is active*/
+.container.right-panel-active .state-panel-left{
+    transform: translateX(0%);
+}
+
+.container.right-panel-active .state-panel-right{
+    transform: translateX(20%);
+}
+
+{/* <div id="container" className={`container${toogle ? " right-panel-active" : ""}`}>
+	<div className="register-container" id="form-container">
+		<Register />
+	</div>
+	<div className="login-container" id="form-container">
+		<Login />
+	</div>
+	<div className="state-container">
+		<div className="state-panel">
+			<div className="state-panel-left" id="state">
+				<h1>Selamat Datang di</h1>
+				<MainvrameAcademy />
+				<p>Klik di bawah untuk masuk</p>
+				<Button className="state-button" id="signIn" onClick={handleChange} >Masuk</Button>
+			</div>
+
+			<div className="state-panel-right" id="state">
+				<h1>Mari Bergabung di</h1>
+				<MainvrameAcademy />
+				<p>Klik di bawah untuk mendaftar</p>
+				<Button className="state-button" id="signUp" onClick={handleChange} >Daftar</Button>
+			</div>
+		</div>
+	</div>
+</div> */}

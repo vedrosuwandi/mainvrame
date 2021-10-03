@@ -1,0 +1,15 @@
+.social-info{
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.social-info li a{
+    text-decoration: none;
+    color: black;
+}
+
+.social-info li a:hover{
+    text-decoration: underline;
+    color: black;
+}

@@ -1,0 +1,49 @@
+
+.register-title{
+    margin-top: 30px;
+}
+
+.register-form{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	height: 100%;
+	text-align: center;
+    margin-top: 5%;
+}
+
+.name-input, .DOB-input{
+    background-color: #eee;
+    border: none;
+	border-bottom: 1px solid black;
+	padding: 12px 15px;
+	margin: 8px 0;
+}
+
+.signup-button{
+	background-color: #7225b9;
+	border: none;
+	width: 60%;
+	margin-top: 10px;
+	border-radius: 10px;
+}
+
+.signup-button:hover{
+	background-color: #7225b9;
+}
+
+.policy{
+	margin-top: 10px;
+	font-size: 12px;
+}
+
+@media only screen and (max-width : 900px){
+	.register-title{
+		display: none;
+	}
+	
+	.form-check-label{
+		font-size: 12px;
+	}
+} 

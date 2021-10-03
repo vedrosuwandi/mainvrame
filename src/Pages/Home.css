@@ -1,0 +1,98 @@
+.home-container{
+    width: 100%;
+    height: 100%;
+    /* border: 1px solid black; */
+}
+
+p{
+    font-size: 15px;
+}
+
+
+/*mainvrame Logo*/
+#mainvrame{
+    width: 15%;
+}
+
+/*Content Container*/
+.home-content{
+    /* border: 1px solid blue; */
+    margin-top: 3%;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    overflow: hidden;
+    justify-content: center;
+    align-items: center;
+}
+
+/*Construct image*/
+#construct{
+    width: 100%;
+    height: auto;
+}
+
+/*img Container*/
+.img-content{
+    /* border: 1px solid black; */
+    position: relative;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/*content Container*/
+.page-content{
+    justify-content: center;
+    text-align: center;
+    /* border: 1px solid black; */
+}
+
+.page-content h1{
+    font-weight: bold;
+}
+
+.content-details{
+    text-align: justify;
+    padding: 0 30px;
+}
+
+/*Kunjung Academy button*/
+#visit-academy{
+    text-transform: none;
+    background-color: #f69622;
+    border: none;
+    border-radius: 10px;
+    letter-spacing: normal;
+    color: white;
+    transition: none;
+}
+
+#visit-academy:active{
+    transform: scale(0.95);
+}
+
+
+
+/*Responsive if the width is lower than 900px*/
+@media only screen and (max-width: 900px) {
+    /*So the construction image and the description are in vertical instead of horizontal*/
+    .home-content{
+        display: block;
+    }
+
+    #mainvrame{
+        display: none;
+    }
+
+    /*adjust the image */
+    #construct{
+        width: 80%;
+    }
+
+    .page-content{
+        padding: 0 40px;
+    }
+  
+}

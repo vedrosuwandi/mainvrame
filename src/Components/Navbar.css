@@ -1,0 +1,64 @@
+/*Navbar Container*/
+.nav-container{
+    height: 10vh;
+    background-color: white;
+    display: flex;
+    position: relative;
+    overflow: hidden;
+}
+/*The left part of the nav-container*/
+.nav-logo{
+    position: absolute;
+    justify-content: center;
+    top: 10%;
+}
+
+.nav-logo img{
+    width: 30vh;
+    margin-left: 20px;
+    opacity: 1;
+    transition: opacity 1s linear;
+}
+
+
+/*the right part of the nav-container*/
+.nav-content{
+    position: absolute;
+    display: flex;
+    flex: end;
+    right: 0;
+    top: 25%;
+}
+ 
+.profile {
+    display: flex;
+    margin-right: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile a{
+    margin-left: 0;
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+
+}
+
+
+/*Logout Button*/
+.logout-link{
+    margin-right: 20px;
+    border-radius: 10px;
+}
+
+a:hover{
+    text-decoration: underline;
+}
+
+
+@media only screen and (max-width: 600px){
+    .nav-logo img{
+       opacity: 0;
+    }
+}

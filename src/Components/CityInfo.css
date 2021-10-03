@@ -1,0 +1,27 @@
+
+.info-content{
+    /* border: 1px solid blue; */
+    display: block;
+}
+
+.info-content h2{
+    font-size: 15px;
+    margin-bottom: 20px;
+
+}
+
+.city-info{
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.city-info li a{
+    text-decoration: none;
+    color: black;
+}
+
+.city-info li a:hover{
+    text-decoration: underline;
+    color: black;
+}
