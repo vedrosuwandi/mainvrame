@@ -98,7 +98,7 @@ p{
     height: 100%;
     width: 200%;
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     transition: transform 1s ease-in-out;
     transform: translateX(0);
     background-color: #966FD6;
@@ -118,6 +118,7 @@ p{
     transform: translateX(100%);
 }
 
+/*to move the form*/
 .small-container.right-panel-active .small-form-content{
     transform: translateX(-50%);
 }
@@ -127,7 +128,7 @@ p{
     height: 70vh;
 }
 
-
+/*When the screen is less or equal than 900px */
 @media only screen and (max-width : 900px){
 
     /*the small container appear when the screen is less than 900px*/
@@ -135,8 +136,13 @@ p{
       display: inline-block;
     }
 
-    .small-container-logo , .form-container{
+    .form-container{
         width: 100%;
+    }
+
+    .small-container-logo{
+        width: 100%;
+        margin-top: 5%;
     }
 
     .small-logo{
@@ -150,7 +156,7 @@ p{
     .form-container{
         justify-content: center;
         align-items: flex-start;
-        margin-top: 15%;
+        margin-top: 10%;
     }
 } 
 
@@ -163,5 +169,12 @@ p{
     .small-form-content{
         overflow: scroll;
     }
+    
+    .form-container{
+        margin-top: 15%;
+    }
 
+    .small-container.right-panel-active .small-form-wrapper{
+        height: 80vh;
+    }
 } 

@@ -1,23 +1,31 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import{Link} from 'react-router-dom'
 import {Button } from 'react-bootstrap';
 
 import Construction from '../../Assets/constructions.png';
+// import Pirrou from '../../Assets/pirrou.png';
 
 import './Home.css';
 import Footer from '../Components/Footer/Footer';
+import Info from '../Components/Footer/Info';
 
 
 const Home = () => {
+  
     return (
         <div className="home-container">
-            {/* <div className="home-header">
+            {/* 
+            <div className="home-header">
                 <img src={Logo} id="mainvrame" alt="logo"/>
-            </div> */}
+            </div> 
+            */}
             <div className="home-content">
                 
                 <div className="img-content">
                     <img src={Construction} alt="construction" id="construct" />
+                    {/* <div className="pirrou-container">
+                        <img src={Pirrou} alt="pirrou" id="pirrou" />
+                    </div>    */}
                 </div>
                 <div className="page-content">
                     <h1>MainVRame City Segera Hadir</h1>
@@ -35,7 +43,13 @@ const Home = () => {
                     </Link>
                 </div>
             </div>
-           <Footer />
+            <div className="info">
+                <Info />
+            </div>
+            <div className="footer">
+                <Footer />
+            </div>
+           
         </div>
     )
 }

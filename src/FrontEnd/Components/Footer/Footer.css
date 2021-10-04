@@ -1,20 +1,4 @@
 
-/*Info Panel*/
-.home-info{
-    margin-top: 50px;
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    /* border: 1px solid black; */
-}
-
-.info-details{
-    display: flex;
-    width: 40%;
-    justify-content: space-around;
-    /* border: 1px solid black; */
-}
-
 .home-footer{
     margin-top: 30px;
     width: 100%;
@@ -22,13 +6,4 @@
     text-align: center;
     /* position: absolute; */
     bottom: 0;
-}
-
-@media only screen and (max-width: 900px){
-      
-    /*So the info are stretch when it is less than 900px*/
-    .info-details{
-        width: 100%;
-        /* border: 1px solid black; */
-    }
 }

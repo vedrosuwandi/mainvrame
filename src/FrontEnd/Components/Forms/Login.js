@@ -10,18 +10,16 @@ const Login = () => {
         setVisibility(!isVisible);
     }
 
-
-
     return (
         <div className="login-content">
             {/* <h1 className="login-title">Masuk</h1> */}
-            <Form className="login-form" data-ms-form="login">
+            <Form data-ms-form="login" className="login-form" >
                 <Form.Group className="col-7 mb-3" controlId="formBasicEmail">            
-                    <Form.Control className="email-input" type="email" placeholder="example@email.com" data-ms-member="email" required/>
+                    <Form.Control data-ms-member="email" className="email-input" type="email" placeholder="example@email.com" required/>
                 </Form.Group>
                 <Form.Group className="col-7 mb-3" controlId="formBasicPassword">
                     <InputGroup>
-                        <Form.Control className="pass-input" type={isVisible? "text" : "password"}  placeholder="Password" data-ms-member="password" required/> 
+                        <Form.Control data-ms-member="password" className="pass-input" type={isVisible? "text" : "password"}  placeholder="Password" required/> 
                             <InputGroup.Prepend className="mt-2" onClick={visible}>
                                 <InputGroup.Text className="visible" style={{padding:"15.5px" , borderBottom:"1px solid black" , backgroundColor:"#eee"}}>
                                    {isVisible ? <Icons.FaEye /> :<Icons.FaEyeSlash />} 

@@ -3,6 +3,7 @@ import {Button} from 'react-bootstrap';
 import './Explore.css';
 
 import Footer from '../Components/Footer/Footer';
+import Info from '../Components/Footer/Info';
 
 
 const Explore = () => {
@@ -24,7 +25,12 @@ const Explore = () => {
                     </div>
                 </div>
             </div>
-            <Footer />
+            <div className="explore-info">
+                <Info />
+            </div>
+            <div className="explore-footer">
+                <Footer />
+            </div>
         </div>
     )
 }
