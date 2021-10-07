@@ -10,14 +10,15 @@ const Login = () => {
         setVisibility(!isVisible);
     }
 
+
     return (
         <div className="login-content">
             {/* <h1 className="login-title">Masuk</h1> */}
-            <Form data-ms-form="login" className="login-form" >
-                <Form.Group className="col-7 mb-3" controlId="formBasicEmail">            
+            <Form data-ms-form="login" className="login-form">
+                <Form.Group className="col-7 mb-3" controlId="LoginformBasicEmail">            
                     <Form.Control data-ms-member="email" className="email-input" type="email" placeholder="example@email.com" required/>
                 </Form.Group>
-                <Form.Group className="col-7 mb-3" controlId="formBasicPassword">
+                <Form.Group className="col-7 mb-3" controlId="LoginformBasicPassword">
                     <InputGroup>
                         <Form.Control data-ms-member="password" className="pass-input" type={isVisible? "text" : "password"}  placeholder="Password" required/> 
                             <InputGroup.Prepend className="mt-2" onClick={visible}>
@@ -34,7 +35,6 @@ const Login = () => {
                     <a href="#/ms/password-reset" id="forgot">Lupa Password?</a>
                 </div>
             </Form>
-          
         </div>
     )
 }
