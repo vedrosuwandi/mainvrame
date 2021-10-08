@@ -1,5 +1,4 @@
 import React from 'react'
-import{Link} from 'react-router-dom'
 import {Button } from 'react-bootstrap';
 
 import Construction from '../../Assets/constructions.png';
@@ -36,11 +35,11 @@ const Home = () => {
                             favoritmu saat peluncurannya sebentar lagi.
                         </p>
                     </div>
-                    <Link to="/academy">
-                        <Button id="visit-academy">
-                            Kunjungi Academy
-                        </Button>
-                    </Link>
+                   
+                    <Button id="visit-academy" href="/academy">
+                        Kunjungi Academy
+                    </Button>
+               
                 </div>
             </div>
             <div className="info">

@@ -13,15 +13,8 @@ function App() {
       <Router>
        <Switch>
           <Route exact path="/" component={Home} />
-        </Switch>
-        <Switch>
           <Route exact path="/academy" component={Explore} />
-        </Switch>
-        <Switch>
-          <Route exact path="/academy/explore" component={Explore} />
-        </Switch>
-        <Switch>
-          <Route path="/mainvrame-academy" component={Academy} />
+          <Route exact path="/academy/explore" component={Academy} />
         </Switch>
       </Router>
     </div>
