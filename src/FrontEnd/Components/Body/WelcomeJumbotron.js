@@ -11,7 +11,7 @@ const WelcomeJumbotron = () => {
                         Daftarkan dirimu dalam Academy kami untuk jadi yang pertama menjelajah ruang virtual dan 
                         berkenalan dengan para VTuber favoritmu nanti.
                     </p>
-                    <Button id="enter-button" href="/mainvrame-academy">
+                    <Button id="enter-button" href="/academy/explore" >
                         Masuk ke Academy
                     </Button>
                 </div>
