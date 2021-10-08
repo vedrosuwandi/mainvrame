@@ -1,28 +1,21 @@
-import Nav from '../Components/Header/Navbar';
-import {Button} from 'react-bootstrap';
 import './Explore.css';
 
 import Footer from '../Components/Footer/Footer';
 import Info from '../Components/Footer/Info';
-
+import Nav from '../Components/Header/Navbar';
+import WelcomeJumbotron from '../Components/Body/WelcomeJumbotron';
+import Signs from '../Components/Forms/Signs';
 
 const Explore = () => {
+    
 
     return (
         <div className="explore" >
             <Nav />
-            <div className="explore-content">
-                <div class="jumbotron jumbotron-fluid">
-                    <div class="jumbotron-container">
-                        <h1>Selamat datang di MainVRame Academy</h1>
-                        <p>MainVRame Academy sedang dalam tahap finalisasi. 
-                            Daftarkan dirimu dalam Academy kami untuk jadi yang pertama menjelajah ruang virtual dan 
-                            berkenalan dengan para VTuber favoritmu nanti.
-                        </p>
-                        <Button id="enter-button" href="/academy/explore/academy">
-                            Masuk ke Academy
-                        </Button>
-                    </div>
+            <WelcomeJumbotron />
+            <div className="forms" id="signup-login" data-ms-content="!members">
+                <div className="forms-wrapper">
+                    <Signs />
                 </div>
             </div>
             <div className="explore-info">

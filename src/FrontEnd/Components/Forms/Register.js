@@ -17,29 +17,29 @@ const Register = () => {
             </h1> */}
             <Form data-ms-form="signup" className="register-form">
                 <Form.Group className="col-7 mb-1" controlId="formBasicName">
-                    <Form.Control className="name-input" type="text" placeholder="Nama" data-ms-member="name" required />
+                    <Form.Control size="sm" className="name-input" type="text" placeholder="Nama" data-ms-member="name" required />
                 </Form.Group>
 
-                <Form.Group className="col-7 mb-1" controlId="formBasicEmail">
-                    <Form.Control className="email-input" type="email" placeholder="example@email.com" data-ms-member="email" required/>
+                <Form.Group className="col-7 mb-1" controlId="RegisterformBasicEmail">
+                    <Form.Control size="sm" className="email-input" type="email" placeholder="example@email.com" data-ms-member="email" required/>
                 </Form.Group>
 
-                <Form.Group className="col-7 mb-1" controlId="formBasicPassword">
+                <Form.Group className="col-7 mb-1" controlId="RegisterformBasicPassword">
                     <InputGroup>
-                        <Form.Control className="pass-input" type={isVisible? 'text' : 'password'} placeholder="Password" data-ms-member="password" required/>
+                        <Form.Control size="sm" className="pass-input" type={isVisible? 'text' : 'password'} placeholder="Password" data-ms-member="password" required/>
                         <InputGroup.Prepend className="mt-2" onClick={visible}>
-                            <InputGroup.Text className="visible" style={{padding:"15.5px" , borderBottom:"1px solid black" , backgroundColor:"#eee"}}>
+                            <InputGroup.Text className="visible" style={{padding:"14px" , borderBottom:"1px solid black" , backgroundColor:"#eee"}}>
                             {isVisible ? <Icons.FaEye /> :<Icons.FaEyeSlash />} 
                             </InputGroup.Text>
                         </InputGroup.Prepend>  
                     </InputGroup>
                 </Form.Group>
 
-                <Form.Group className="col-7 mb-1" controlId="formBasicPassword">
-                    <Form.Control className="DOB-input" type="text" data-ms-member="date-of-birth" placeholder="Tanggal Lahir (DD/MM/YYYY)" required/>
+                <Form.Group className="col-7 mb-1" controlId="RegisterformBasicDateofBirth">
+                    <Form.Control size="sm" className="DOB-input" type="text" data-ms-member="date-of-birth" placeholder="Tanggal Lahir (DD/MM/YYYY)" required/>
                 </Form.Group>
 
-                <Form.Group className="mb-1" controlId="formBasicCheckbox">
+                <Form.Group className="mb-1" controlId="RegisterformBasicCheckbox">
                     <Form.Check className="loket-input" type="checkbox" data-ms-member="loketcom-newsletter" label="Saya bersedia menerima promosi berkala dari Loket.com." />
                 </Form.Group>
                 <Button className="signup-button" variant="primary" type="submit" >

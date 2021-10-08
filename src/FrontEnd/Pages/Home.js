@@ -1,5 +1,5 @@
 import React from 'react'
-import{Link} from 'react-router-dom'
+
 import {Button } from 'react-bootstrap';
 
 import Construction from '../../Assets/constructions.png';
@@ -8,10 +8,13 @@ import Construction from '../../Assets/constructions.png';
 import './Home.css';
 import Footer from '../Components/Footer/Footer';
 import Info from '../Components/Footer/Info';
+// import Signs from '../Components/Forms/Signs';
 
 
 const Home = () => {
   
+
+
     return (
         <div className="home-container">
             {/* 
@@ -36,20 +39,22 @@ const Home = () => {
                             favoritmu saat peluncurannya sebentar lagi.
                         </p>
                     </div>
-                    <Link to="/academy">
-                        <Button id="visit-academy">
-                            Kunjungi Academy
-                        </Button>
-                    </Link>
+                    
+                    <Button id="visit-academy" href="/academy">
+                        Kunjungi Academy
+                    </Button>
+                
                 </div>
             </div>
+
+            {/* <Signs /> */}
+            
             <div className="info">
                 <Info />
             </div>
             <div className="footer">
                 <Footer />
             </div>
-           
         </div>
     )
 }

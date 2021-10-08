@@ -1,0 +1,118 @@
+
+#small-form-container{
+    height: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+/*Scalable wrapper inside a page*/
+.small-form-wrapper{
+    /* border: 1px solid black; */
+    box-shadow: 0 14px 50px rgba(92, 66, 134, 0.5);
+    border-radius: 10px;
+    width: 70%;
+    overflow: hidden;
+    background-color: #7225b9;
+    height: 55vh;
+}
+
+.small-state-toogle{
+    display: flex;
+    justify-content: center;
+    position: relative;
+    /* box-shadow: 0px 0px 10px 4px #FADA5E; */
+    border-radius: 10px;
+    transition: transform 1s ease-in-out;
+    transform: translateX(0);
+}
+
+/*Selected toogle*/
+.small-toogle-select{
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    position :absolute;
+    background: #966FD6;
+    transition: transform 1s ease-in-out;
+    transform: translateX(0);
+    z-index: -1;
+}
+
+/*toogle button*/
+#toogle-button{
+    cursor: pointer;
+    outline: none;
+    border: none;
+    text-transform: none;
+    color: black;
+    background-color: transparent;
+    width: 50%;
+    border-radius: 10px;
+}
+
+
+/*FORM*/
+/*the container that consist of the form*/
+.small-form-content{
+    height: 100%;
+    width: 200%;
+    display: flex;
+    justify-content: center;
+    transition: transform 1s ease-in-out;
+    transform: translateX(0);
+    overflow: hidden;
+    background-color: #966FD6;
+} 
+
+/*So the login form can be move as the state triggers it*/
+.small-login-form{
+    width: 200%;
+}
+
+.small-register-form{
+    width: 200%;
+}
+
+/*Animation*/
+/*to move the toogle*/
+.small-form-container.right-panel-active .small-toogle-select{
+    transform: translateX(100%);
+}
+
+/*to move the form*/
+.small-form-container.right-panel-active .small-form-content{
+    transform: translateX(-50%);
+}
+
+/*change the height of the panel as the register tab pressed*/
+.small-form-container.right-panel-active .small-form-wrapper{
+    height: 72vh;
+}
+.small-form-container.right-panel-active .small-register-form{
+  margin-top: 10px;
+}
+
+
+/*When the screen is less or equal than 900px */
+@media only screen and (max-width : 990px){
+
+    .small-form-container.right-panel-active .small-form-wrapper{
+        height: 70vh;
+    }
+} 
+
+/*mobile*/
+@media only screen and (max-width : 600px){
+    .small-form-wrapper{
+        /* border: 1px solid black; */
+        width: 100%;
+    }
+    .small-form-content{
+        overflow: scroll;
+    }
+
+    .small-form-container.right-panel-active .small-form-wrapper{
+        height: 80vh;
+    }
+} 

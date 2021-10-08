@@ -22,6 +22,7 @@
 
 
 /*the right part of the nav-container*/
+
 .nav-content{
     position: absolute;
     display: flex;
@@ -29,7 +30,15 @@
     right: 0;
     top: 25%;
 }
- 
+
+#signs-button{
+    background-color: #966FD6;
+    border: none;
+    margin-right: 50px;
+    border-radius: 10px;
+}
+
+
 .profile {
     display: flex;
     margin-right: 20px;
