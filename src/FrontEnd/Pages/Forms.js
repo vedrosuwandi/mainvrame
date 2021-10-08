@@ -4,11 +4,12 @@ import './Forms.css';
 import MainvrameAcademy from '../Components/MainVrameAcademy';
 import Signs from '../Components/Forms/Signs';
 
+
 const Forms = () => {
 
     return (
         <div className="Forms">
-            <div id="container"  >
+            <div id="container">
                 <div className="small-container-logo">
                     <div className="small-logo">
                         <h1>Selamat Datang di</h1>
@@ -20,7 +21,6 @@ const Forms = () => {
                         <Signs />
                     </div>
                 </div>
-               
             </div>
         </div>
       

@@ -14,7 +14,7 @@ const HomeNav = () => {
                 <img src={Logo} alt="logo" />
             </div>
             <div className="nav-content">
-                <Button href="/academy#signup-login" data-ms-content="!members" id="signs-button">Daftar atau Masuk</Button>
+                {/* <Button href="/academy#signup-login" data-ms-content="!members" id="signs-button">Daftar atau Masuk</Button> */}
 
                 <div className="profile" data-ms-content="members">
                     {/*To ignore the a tag warning */}

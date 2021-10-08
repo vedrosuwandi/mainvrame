@@ -10,6 +10,15 @@ const Login = () => {
         setVisibility(!isVisible);
     }
 
+    // const [email , setEmail] = useState("");
+
+    // const change = (e)=>{
+    //     setEmail(e.target.value);
+    // }
+
+    // const show = () =>{
+    //     console.log(email);
+    // }
 
     return (
         <div className="login-content">
@@ -29,7 +38,7 @@ const Login = () => {
                     </InputGroup>
                 </Form.Group>
                 <div className="login-action">
-                    <Button variant="primary" className="signin-button" type="submit">
+                    <Button variant="primary" className="signin-button" type="submit" >
                         Masuk
                     </Button>
                     <a href="#/ms/password-reset" id="forgot">Lupa Password?</a>

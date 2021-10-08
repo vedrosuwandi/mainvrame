@@ -2,6 +2,7 @@ import './WelcomeJumbotron.css';
 import {Button} from 'react-bootstrap';
 
 const WelcomeJumbotron = () => {
+    
     return ( 
         <div className="jumbotron-content">
             <div class="jumbotron jumbotron-fluid">

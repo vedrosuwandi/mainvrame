@@ -7,13 +7,13 @@ import { useState } from 'react';
 import './Signs.css';
 import  {Button} from 'react-bootstrap';
 
-
 const Signs = () => {
     
     const [toogle, setToogle] = useState(false);
     
     const handleChange = () =>{
        setToogle(!toogle);
+    
     }
 
     return ( 

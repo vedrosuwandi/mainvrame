@@ -9,7 +9,6 @@ import Signs from '../Components/Forms/Signs';
 const Explore = () => {
     
 
-
     return (
         <div className="explore" >
             <Nav />
