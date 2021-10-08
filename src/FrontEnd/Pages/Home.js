@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 import {Button } from 'react-bootstrap';
 
@@ -8,7 +8,7 @@ import Construction from '../../Assets/constructions.png';
 import './Home.css';
 import Footer from '../Components/Footer/Footer';
 import Info from '../Components/Footer/Info';
-// import Signs from '../Components/Forms/Signs';
+import Signs from '../Components/Forms/Signs';
 
 
 const Home = () => {
@@ -43,12 +43,13 @@ const Home = () => {
                     <Button id="visit-academy" href="/academy">
                         Kunjungi Academy
                     </Button>
-                
                 </div>
             </div>
 
-            {/* <Signs /> */}
-            
+            {/* <div className="forms">
+                <Signs />
+            </div>
+             */}
             <div className="info">
                 <Info />
             </div>
