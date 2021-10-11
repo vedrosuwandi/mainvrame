@@ -46,9 +46,8 @@ const Home = () => {
                 
                 </div>
             </div>
-            {/* <div className="forms">
-                <Signs />
-            </div> */}
+
+            
             <div className="info">
                 <Info />
             </div>
