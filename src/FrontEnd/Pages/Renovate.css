@@ -1,0 +1,115 @@
+.renovate-container{
+  width: 100%;
+  height: 100vh;
+}
+
+.renovate-content{
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    vertical-align: middle;
+    align-items: center;
+    /* border: 2px solid red; */
+}
+
+.renovate-img{
+    display: flex;
+    justify-content: center;
+    position: relative;
+    overflow: visible;
+    width: 80%;
+    height: 60%;
+    /* border: 1px solid red; */
+}
+
+#renovate{
+    position: absolute;
+    width: 50%;
+    overflow: visible;
+    /* border: 2px solid black; */
+}
+
+#pirrou{
+    position: absolute;
+    width: 25%;
+    overflow: visible;
+    right: 15%;
+    bottom: 10%;
+    /* border: 2px solid black; */
+}
+
+
+.renovate-details{
+    position: absolute;
+    bottom: 10%;
+    left: 30%;
+    /* border: 2px solid black; */
+}
+
+/*Half screen*/
+@media only screen and (max-width : 900px){
+    #renovate{
+        width: 100%;
+    }
+        
+    #pirrou{
+        width: 60%;
+        bottom: 0;
+        /* right: -13%; */
+    }
+        
+    .renovate-details{
+        text-align: center;
+        position: absolute;
+        bottom: -15%;
+        left: 15%;
+        /* border: 2px solid black; */
+    }
+
+}
+
+/*Mobile*/
+@media only screen and (max-width : 650px){
+    
+    #renovate{
+        width: 120%;
+    }
+        
+    #pirrou{
+        width: 75%;
+        bottom: -10%;
+        right: 10%;
+    }
+        
+    .renovate-details{
+        width: 120%;
+        text-align: center;
+        bottom: -25%;
+        right: 0;
+        left: -10%;
+        /* border: 2px solid black; */
+    }
+}
+
+/*Mobile*/
+@media only screen and (max-width : 480px){
+    
+    #renovate{
+        width: 120%;
+    }
+        
+    #pirrou{
+        width: 75%;
+        bottom: 20%;
+        right: 10%;
+    }
+        
+    .renovate-details{
+        width: 120%;
+        text-align: center;
+        bottom: -5%;
+        right: 0;
+        left: -10%;
+        /* border: 2px solid black; */
+    }
+}

@@ -1,12 +1,11 @@
 import './App.css';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+// import Renovate from './FrontEnd/Pages/Renovate';
 import Home from './FrontEnd/Pages/Home';
 import Academy from './FrontEnd/Pages/Academy';
 import Explore from './FrontEnd/Pages/Explore';
 import Forms from './FrontEnd/Pages/Forms';
 
-// import Login from './FrontEnd/Components/Forms/Login';
-// import Register from './FrontEnd/Components/Forms/Register';
 
 
 function App() {
@@ -23,6 +22,7 @@ function App() {
       </Router>
     </div>
   );
+
 }
 
 export default App;
