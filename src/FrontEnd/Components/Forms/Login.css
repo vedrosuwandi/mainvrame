@@ -1,0 +1,58 @@
+.login-content{
+    margin-top : 10vh;
+}
+
+h1{
+   text-align: center;
+}
+
+.login-form{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	height: 100%;
+	text-align: center;
+    /* margin-top: 20%; */
+}
+
+.visible:hover{
+	cursor: pointer;
+}
+
+.email-input, .pass-input{
+    background-color: #eee;
+    border: none;
+	border-bottom: 1px solid black;
+	padding: 12px 15px;
+	margin: 8px 0;
+}
+/*button and forgot password*/
+.login-action{
+	width: 60%;
+}
+
+.signin-button{
+	background-color: #7225b9;
+	border: none;
+	border-radius: 10px;
+	float: left;
+}
+
+.signin-button:hover{
+	background-color: #7225b9;
+}
+
+#forgot{
+    /* border: 1px solid black; */
+    margin-left: 10px;
+	color: blue;
+	float: right;
+}
+
+
+@media only screen and (max-width : 900px){
+	.login-title{
+		display: none;
+	}
+} 
