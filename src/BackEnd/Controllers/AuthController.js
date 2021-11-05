@@ -33,7 +33,7 @@ const register = (req, res) =>{
             User.save()
             .then((user)=>{
                 res.json({
-                    message : "User Registered"
+                    success : "User Registered"
                 })
             }).catch((error)=>{
                 if("Username" in error.keyPattern){
@@ -52,6 +52,15 @@ const register = (req, res) =>{
             })
         }
     })  
+}
+
+//Generate Access Token
+const genAccessToken = (user)=>{
+    return jwt.sign({Username : user.Username} , process.env.ACCESS_TOKEN_SECRET_KEY , {expiresIn : process.env.ACCESS_TOKEN_EXPIRES_IN} );
+}
+//Generate Refresh Token
+const genRefreshToken = (user)=>{
+    return jwt.sign({Username : user.Username}, process.env.REFRESH_TOKEN_SECRET_KEY , {expiresIn : process.env.REFRESH_TOKEN_EXPIRES_IN} );
 }
 
 //Login Function
@@ -74,9 +83,13 @@ const login = (req, res)=>{
                 }else{
                      // if the password is match the token from jwt will be created by the username
                     if(result) {
-                        const token = jwt.sign({Username : user.Username} , process.env.ACCESS_TOKEN_SECRET_KEY , {expiresIn : process.env.ACCESS_TOKEN_EXPIRES_IN} );
+                     
                         //Users stores the token in the local machine for the time defined
-                        const refreshToken = jwt.sign({Username : user.Username}, process.env.REFRESH_TOKEN_SECRET_KEY , {expiresIn : process.env.REFRESH_TOKEN_EXPIRES_IN} );
+                       //Generate Access Token
+                       const token = genAccessToken(user);
+                       //Generate Refresh Token
+                       const refreshToken = genRefreshToken(user);
+                        // send the data, auth and tokens
                         res.json({
                             auth : true,
                             token,
@@ -85,6 +98,7 @@ const login = (req, res)=>{
                             message : "User Log In"
                         })
                     }else{
+                        // The password is incorrect
                         res.json({
                             auth : false,
                             message : "Incorrect Password"
@@ -112,16 +126,16 @@ const refresh = (req, res) =>{
             })
         }else{
             //Create new token that expires in the time set so the user does not log out before the refreshToken is expired
-            const token = jwt.sign({Username : decode.Username} , process.env.ACCESS_TOKEN_SECRET_KEY , {expiresIn : process.env.ACCESS_TOKEN_EXPIRES_IN});
-            const refreshToken = req.body.refreshToken;
+            const token = genAccessToken(decode);
             res.status(200).json({
                 message : "Token Refreshed.",
                 token,
-                refreshToken,
+                refreshToken
             })
         }
     })
 }
+
 
 module.exports = {
     register , login, refresh

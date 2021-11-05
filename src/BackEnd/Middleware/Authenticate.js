@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken');
 
 const authenticate = (req, res, next) =>{
     try{
-
         //Send the token with the bearer string in the header as auth key
         const token =  localStorage.getItem("token");
         

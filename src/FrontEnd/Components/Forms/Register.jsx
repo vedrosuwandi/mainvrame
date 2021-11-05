@@ -5,7 +5,7 @@ import Axios from 'axios';
 
 import './Register.css';
 
-const Register = () => {
+const Register = ({onClose}) => {
     const [name, setName] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");   
@@ -37,7 +37,8 @@ const Register = () => {
         setPhone(event.target.value);
     }
 
-    const register = ()=>{
+    const register = (event)=>{
+        event.preventDefault();
         if(password !== repassword){
             alert("Password does not Match");
         }else{
@@ -50,6 +51,19 @@ const Register = () => {
             }).then((response)=>{
                 if("message" in response.data){
                     alert(response.data.message);
+                }else if("success" in response.data){
+                    alert(response.data.success);
+
+                    //Clear the textfield
+                    setName("");
+                    setUsername("");
+                    setEmail("");
+                    setPassword("");
+                    setPhone("");
+                    setRePass("");
+
+                    // Close the Modal
+                    onClose();
                 }
             })
         }

@@ -6,6 +6,7 @@
     position: relative;
     overflow: hidden;
 }
+
 /*The left part of the nav-container*/
 .nav-logo{
     position: absolute;
@@ -65,6 +66,12 @@ a:hover{
     text-decoration: underline;
 }
 
+/*Logout Button*/
+.logout-link{
+    margin-left: 20px;
+    margin-right: 20px;
+    border-radius: 10px;
+}
 
 @media only screen and (max-width: 600px){
     .nav-logo img{
