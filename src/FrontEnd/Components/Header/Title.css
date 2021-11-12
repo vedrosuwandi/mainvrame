@@ -1,0 +1,41 @@
+#title-omnivr{
+    font-family: "Cyberverse-bold";
+    font-size: 45px;
+    text-align: center;
+}
+
+#title-omnivr span{
+    color: rgb(247, 141, 30);
+}
+
+#title-metaverse{
+    color: rgb(0, 0, 0);
+    font-family: "Cyberverse-bold";
+    text-align: center;
+    font-size: 90px;
+}
+
+#title-metaverse span{
+    color: rgb(247, 141, 30);
+}
+
+
+@media only screen and (max-width : 900px) {
+    #title-omnivr{
+        font-size: 50px;
+    }
+    #title-metaverse{
+        font-size: 80px;
+    }
+}
+
+/*Mobile*/
+@media only screen and (max-width : 426px) {
+ 
+    #title-omnivr{
+        font-size: 30px;
+    }
+    #title-metaverse{
+        font-size: 40px;
+    }
+}

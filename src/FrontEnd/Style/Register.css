@@ -1,0 +1,46 @@
+.register-container{
+    width: 100%;
+    height: 100vh;
+}
+
+.register-wrapper{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    /* border: 1px solid red; */
+}
+
+.register-title{
+    display: flex;
+    width: auto;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+}
+
+.register-content{
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+}
+
+
+@media only screen and (max-width : 900px) {
+    .register-wrapper{
+        display: block;
+    }
+}
+
+/*Mobile*/
+@media only screen and (max-width : 425px) {
+    
+    .register-title{
+        padding: 2%;
+    }
+}
+
+
+@font-face {
+    font-family: 'Cyberverse-bold';
+    src: url('../Assets/Cyberverse/Cyberverse\ Bold.otf');
+}

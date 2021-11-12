@@ -1,0 +1,94 @@
+.profiledetails-container{
+    width: 100%;
+    /* border: 1px solid black; */
+}
+
+.profiledetails-username, .profiledetails-email, .profiledetails-phone{
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    /* border: 1px solid black; */
+}
+
+.profiledetails-email, .profiledetails-phone, .profiledetails-actions{
+    margin-top: 15px;
+    font-size: 20px;
+}
+
+.profiledetails-username-edit, .profiledetails-email-edit ,.profiledetails-phone-edit{
+    margin-left: auto;
+    /* border: 1px solid black; */
+}
+
+
+.profiledetails-actions{
+    display: flex;
+    justify-content: center;
+    margin-top: 25px;
+    /* border: 1px solid black; */
+}
+
+.profiledetails-actions-wrapper{
+    width: 50%;
+    display: flex;
+    justify-content: space-evenly;
+    /* border: 1px solid black; */
+}
+
+.profiledetails-changepass,  .profiledetails-logout{
+    display: flex;
+    justify-content: center;
+    /* border: 1px solid blue; */
+    flex: 1;
+}
+
+#changepass-button , #logout-button{
+    padding: 5px;
+    border-radius: 10px;
+    width: 90%;
+}
+
+
+
+@media only screen and (max-width: 425px){
+   
+    
+    .profiledetails-username, .profiledetails-email{
+        display: flex;
+        align-items: center;
+        font-size: 15px;
+        /* border: 1px solid black; */
+    }
+
+    .profiledetails-email, .profiledetails-phone, .profiledetails-actions, .profiledetails-logout{
+        margin-top: 10px;
+        font-size: 15px;
+    }
+
+    .profiledetails-actions{
+        display: flex;
+        justify-content: center;
+        margin-top: 25px;
+        /* border: 1px solid black; */
+    }
+    
+    .profiledetails-actions-wrapper{
+        display: block;
+        width: 70%;
+        /* border: 1px solid black; */
+    }
+    
+    .profiledetails-changepass,  .profiledetails-logout{
+        display: flex;
+        justify-content: center;
+        /* border: 1px solid blue; */
+    }
+
+    #changepass-button , #logout-button{
+        padding: 5px;
+        border-radius: 10px;
+        width: 100%;
+    }
+
+ 
+}

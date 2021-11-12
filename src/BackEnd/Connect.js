@@ -14,6 +14,8 @@ app.use(cors());
 app.use(express.json());
 
 //Connect to Database
+
+
 mongoose.connect( process.env.DATABASE_CONNECTION ,  {
     useNewUrlParser: true,
     useUnifiedTopology: true

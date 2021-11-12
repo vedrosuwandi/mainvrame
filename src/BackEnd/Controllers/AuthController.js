@@ -71,7 +71,7 @@ const login = (req, res)=>{
     // Search for User in the database
     UserModel.findOne({
        Username : username
-    }).then((user)=>{
+    },).then((user)=>{
         if(user){
             //Compare the password input and the encrypted password in the database
             bcrypt.compare(password , user.Password , (err, result)=>{
@@ -83,7 +83,6 @@ const login = (req, res)=>{
                 }else{
                      // if the password is match the token from jwt will be created by the username
                     if(result) {
-                     
                         //Users stores the token in the local machine for the time defined
                        //Generate Access Token
                        const token = genAccessToken(user);
@@ -117,20 +116,24 @@ const login = (req, res)=>{
 
 // Refresh the token with the refresh token when the token is expired
 const refresh = (req, res) =>{
-    const refreshToken = req.body.refreshToken;
+    // get the token from the middleware
+    const refreshToken = req.refreshToken;
+    req.headers['Authorization'] = refreshToken;
+
     //Verify the refresh token to generate new token
     jwt.verify(refreshToken , process.env.REFRESH_TOKEN_SECRET_KEY , (err, decode)=>{
         if(err) {
             res.status(400).json({
-                err
+                err,
+                errMessage : "Refresh",
+                message : "Refresh Token Expired"
             })
         }else{
             //Create new token that expires in the time set so the user does not log out before the refreshToken is expired
             const token = genAccessToken(decode);
             res.status(200).json({
-                message : "Token Refreshed.",
+                message : "Token Refreshed",
                 token,
-                refreshToken
             })
         }
     })

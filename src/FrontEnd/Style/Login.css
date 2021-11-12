@@ -1,0 +1,50 @@
+.login-container{
+    width: 100%;
+    height: 100vh;
+}
+
+.login-wrapper{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    /* border: 1px solid red; */
+}
+
+.login-title{
+    display: flex;
+    width: auto;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+}
+
+.login-form{
+    flex: 1;
+}
+
+@media only screen and (max-width : 900px) {
+    .login-wrapper{
+        display: block;
+    }
+
+    .login-title{
+        padding: 5%;
+    }
+}
+
+/*Mobile*/
+@media only screen and (max-width : 425px) {
+    .login-wrapper{
+        display: block;
+    }
+
+    .login-title{
+        padding: 10%;
+    }
+}
+
+
+@font-face {
+    font-family: 'Cyberverse-bold';
+    src: url('../Assets/Cyberverse/Cyberverse\ Bold.otf');
+}

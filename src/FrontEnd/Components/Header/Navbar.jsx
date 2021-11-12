@@ -1,92 +1,177 @@
-import { useState } from 'react';
-import Dialog from '@mui/material/Dialog';
-import {Button} from 'react-bootstrap';
+import React , {useState} from 'react';
 
-import Logo from '../../Assets/mainvrame.png';
-
-import Login from '../Forms/Login';
-import Register from '../Forms/Register';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import MenuItem from '@mui/material/MenuItem';
+import Menu from '@mui/material/Menu';
+import MenuIcon from '@mui/icons-material/Menu';
+import AccountCircle from '@mui/icons-material/AccountCircle';
 
 
 import './Navbar.css';
 
 
-const Navbar = () => {
+const Navbar = ({user, logout}) => {
 
-    const [login, setLogin] = useState(false);
-    const [register, setRegister] = useState(false);
-    const [isLogin , setIsLogin] = useState(false);
+    const [anchorEl, setAnchorEl] = useState(null);
 
-    //Login Modal
-    const openLogin = ()=>{
-        setLogin(true);
-    }
+    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
+  
+    const isMenuOpen = Boolean(anchorEl);
+    
+    const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  
+    const handleProfileMenuOpen = (event) => {
+      setAnchorEl(event.currentTarget);
+    };
+  
+    const handleMobileMenuClose = () => {
+      setMobileMoreAnchorEl(null);
+    };
+  
+    const handleMenuClose = () => {
+      setAnchorEl(null);
+      handleMobileMenuClose();
+    };
+  
+    const handleMobileMenuOpen = (event) => {
+      setMobileMoreAnchorEl(event.currentTarget);
+    };
 
-    const closeLogin = ()=>{
-        setLogin(false);
-    }
+    const menuId = 'primary-search-account-menu';
+    const renderMenu = (
+      <Menu
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        id={menuId}
+        keepMounted
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        open={isMenuOpen}
+        onClose={handleMenuClose}
+      >
+        <MenuItem href="/profile" component="a" > Profile </MenuItem>
+        <MenuItem onClick={logout}>LogOut</MenuItem>
+      </Menu>
+    );
 
-    //Register Modal
-    const openRegister = ()=>{
-        setRegister(true);
-    }
-
-    const closeRegister = ()=>{
-        setRegister(false);
-    }
-
-    const logout = ()=>{
-        //delete the token in the localstorage
-        localStorage.removeItem("token");
-        //Change login Status
-        setIsLogin(false);
-    }   
-
+    // Mobile 
+    const mobileMenuId = 'primary-search-account-menu-mobile';
+    const renderMobileMenu = (
+ 
+        <Menu
+            anchorEl={mobileMoreAnchorEl}
+            anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+            }}
+            id={mobileMenuId}
+            keepMounted
+            transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+            }}
+            open={isMobileMenuOpen}
+            onClose={handleMobileMenuClose}
+        >
+            <MenuItem href="/profile" component="a" >{user.Name}</MenuItem>
+            <MenuItem onClick={logout}>LogOut</MenuItem>
+        </Menu>
+ 
+    );
+  
 
     return ( 
         <div className="nav-container">
-            <div className="nav-logo">
-                <img src={Logo} alt="logo" />
-            </div>
-            <div className="nav-content">
-                { isLogin ?
-                    <div className="nav-profile" style={{display:"flex"}}>
-                        <h4>
-                            Welcome,
-                             {/* {data.Name} */}
-                        </h4>
-                        <div className="logout">
-                            <Button variant="danger" className="logout-link" onClick={logout}>Logout</Button> 
-                        </div>
-                    </div>
-                    :
-                    <div className="nav-signs" style={{display:"flex"}}>
-                        <div className="login">
-                            <Button variant="primary" className="login-link" onClick={openLogin} >Login</Button> 
-                        </div>
-                        <div className="register">
-                            <Button variant="primary" className="register-link" onClick={openRegister}>Register</Button> 
-                        </div>
-                    </div>
-                }
-            </div>
+         <Box sx={{ flexGrow: 1 }}>
+            <AppBar position="static" style={{ background: '#000000' }}>
+                <Toolbar>
+                    <IconButton
+                        size="large"
+                        edge="start"
+                        color="inherit"
+                        aria-label="open drawer"
+                        sx={{ mr: 2 }}
+                    >
+                        <MenuIcon />
+                    </IconButton>
+                
+                    <Box sx={{ flexGrow: 1 }} />
 
+                      {/* Menu on the Right Side */}
 
-            {/* Login */}
-            <Dialog open={login} onClose={closeLogin}>
-                <Login onClose={closeLogin} />
-              
-            </Dialog>
+                      {/* Home */}
+                      <Box sx={{ display: { xs: 'none', md: 'flex' } }}> 
+                        <IconButton
+                            size="large"
+                            edge="end"
+                            aria-label="home-nav"
+                            color="inherit"
+                        >
+                            <Typography style={{color:"white", textDecoration:"none"}} component="a" href="/dashboard">
+                                Home
+                            </Typography>                         
+                        </IconButton>
+                      </Box>
 
+                      {/* About */}
+                      <Box sx={{ display: { xs: 'none', md: 'flex' } }}> 
+                        <IconButton
+                            size="large"
+                            edge="end"
+                            aria-label="about-nav"
+                            color="inherit"
+                        >
+                            <Typography style={{color:"white", textDecoration:"none"}} component="a" href="/dashboard">
+                                About
+                            </Typography>                         
+                        </IconButton>
+                      </Box>
 
-
-            {/* Register */}
-            <Dialog open={register} onClose={closeRegister}>
-                <Register onClose={closeRegister} />
-            </Dialog>
-
-
-
+                      {/* Account Profile */}
+                      <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                        <IconButton
+                            size="large"
+                            edge="end"
+                            aria-label="account of current user"
+                            aria-controls={menuId}
+                            aria-haspopup="true"
+                            onClick={handleProfileMenuOpen}
+                            color="inherit"
+                        >
+                            <Typography>
+                                {user.Name} &nbsp;
+                            </Typography>
+                            <AccountCircle />
+                        </IconButton>
+                    </Box>
+                     
+                    <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+                        <IconButton
+                        size="large"
+                        aria-label="show more"
+                        aria-controls={mobileMenuId}
+                        aria-haspopup="true"
+                        onClick={handleMobileMenuOpen}
+                        color="inherit"
+                        >
+                            <AccountCircle />
+                        </IconButton>
+                    </Box>
+                    
+                </Toolbar>
+              </AppBar>
+              {renderMobileMenu}
+              {renderMenu}
+            </Box>
         </div>
      );
 }

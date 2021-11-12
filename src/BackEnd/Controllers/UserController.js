@@ -1,5 +1,7 @@
 const User = require('../Models/UserModel');
+const bcrypt = require('bcryptjs');
 
+//get all user
 const index = (req, res) => {
     //db.collection.find()
     User.find({}).
@@ -19,7 +21,7 @@ const index = (req, res) => {
 //Create document to User collection
 const create = (req, res) =>{
     let user = new User({
-        N : req.body.FullName,
+        Name : req.body.FullName,
         Username : req.body.Username,
         Contact : {
             Email : req.body.Email,
@@ -67,35 +69,64 @@ const update = (req, res, next) =>{
 
 }
 
+//Change Password
+const changePass = (req, res)=>{
+    const username = req.body.Username;
+    const password = req.body.Password;
+
+    //Hash the new pass
+    bcrypt.hash(password , 10 , (err, hashPass)=>{
+        if(err){
+            res.json({
+                err
+            })
+        }else{
+            // find user with the username and update the password
+            User.findOneAndUpdate({Username : username} , {
+                Password : hashPass
+            }).then(()=>{
+                res.json({
+                    message : "Password Has been Changed"
+                })
+            }).catch((err)=>{
+                res.json({
+                    err,
+                    message : "Password Does Not Change"
+                })
+            })
+        }
+    })
+  
+}
+
+
 // Top Up Currency
 const topup = (req, res, next) =>{
-    const username = req.params.Username
+    const username = req.params.Username;
+    const amount = req.body.Amount;
 
     User.findOneAndUpdate({Username : username} , {
         $inc : {
-            'Currency' : 20000
+            'Currency' : amount
         }
     }).then((response)=>{
         res.json({
-            response,
             message : "Data Updated"
         })
     }).catch((err)=>{
         res.json({
-            username : username,
-            data : data,
             message : "Update Failed"
         })
     })
 
 }
 
-//Show Specific User based on FullName
-const show = (req, res) =>{
-    let FullName = req.body.FullName;
-    User.findOne({FullName : FullName}).then((response)=>{
+//Show Specific User based on Username based on the token
+const getuser = (req, res) =>{
+    let Username = req.user.Username;
+    User.findOne({Username : Username},{Password: 0}).then((mydata)=>{
         res.json({
-            response,
+            mydata,
         })
     }).catch((error)=>{
         res.json({
@@ -140,5 +171,12 @@ const show_spec = (req, res) =>{
 }
 
 module.exports = {
-    index, show, create, topup, update, show_spec, remove 
+    index, 
+    getuser, 
+    create, 
+    topup, 
+    update,
+    changePass, 
+    show_spec, 
+    remove
 }
