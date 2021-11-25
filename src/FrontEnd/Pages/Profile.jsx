@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import ProfileDetails from '../Components/Profile/ProfileDetails';
+import axios from 'axios';
 
 import {Button} from 'react-bootstrap';
 import { styled } from '@mui/material/styles';
@@ -10,13 +10,19 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
+
 import AddPhoto from '@mui/icons-material/AddAPhoto';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+
 
 import Avatar from '../Assets/avatar.png';
 import Navbar from '../Components/Header/Navbar';
 
+import ProfileDetails from '../Components/Profile/ProfileDetails';
+
 import '../Style/Profile.css';
+import Cookies from 'js-cookie';
+import ChangeDialog from '../Components/Dialog/ChangeDialog';
 
 const Input = styled('input')({
     display: 'none',
@@ -57,30 +63,110 @@ return {
 }
   
 
-const Profile = ({isLoggedIn, user, logout}) => {
+const Profile = ({ processCurrency, user, logout}) => {
 
- 
+    // Change Password
+    const [open, setOpen] = useState(false);
+    const [oldPassword, setOldPassword] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPass , setConfirmPass] = useState("");
+    const [isChanged , setIsChanged] = useState(null);
+    const [changedStat , setChangedStat] = useState("");
+
+    const handleOldPassword = (event)=>{
+        setOldPassword(event.target.value);
+    }
+
+    const handlePassword = (event)=>{
+        setPassword(event.target.value);
+    }
+
+    const handleConfirmPassword = (event)=>{
+        setConfirmPass(event.target.value);
+    }
+
+    // Open and Close Function of the Dialog
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+
+    const changePass = async (event)=>{
+        event.preventDefault();
+        if(password !== confirmPass){
+            setChangedStat("Password Does not Not Match");
+            setIsChanged(false);
+        }else if(oldPassword === ""){
+            setChangedStat("Please enter old password")
+            setIsChanged(false)
+        }else{
+            await axios.post('http://localhost:3003/user/changepass' , {
+                OldPassword : oldPassword,
+                Password : password
+                
+            },{
+                headers : {
+                    Authorization : "Bearer " + Cookies.get('token')
+                },
+            }).then((response)=>{
+               if(!response.data.changed){
+                    setChangedStat("Old Password Incorrect");
+                    setIsChanged(false);
+               }else{
+                    setChangedStat("Password Changed");
+                    setIsChanged(true);
+                    setOldPassword("");
+                    setPassword("");
+                    setConfirmPass("");
+                    setTimeout(()=>{
+                        setIsChanged(null);
+                        handleClose()
+                    },1000)
+               }
+            }).catch((err)=>{
+                console.log(err);
+            })
+        }
+    }
+
+    //currency
+    const [currency , setCurrency] = useState();
 
     useEffect(()=>{
         //Check if the access token is exist
         if(localStorage.getItem("refreshToken") == null){
             alert("Please Login");
             window.location.href="/"
+        }else{
+            // get user currency
+            axios.get('http://localhost:3003/user/getcurrency', {
+                headers : {
+                    Authorization : "Bearer " + Cookies.get('token')
+                }
+            })
+            .then((response)=>{
+                setCurrency(response.data.currency);
+            }).catch((err)=>{
+                console.log(err.message);
+            })
         }
-        
-    },[])
+        // console.log(user);
+    },[currency])
 
+    // Profile Tab
     const [value, setValue] = useState(0);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
 
-    
+    // To prevent Error when retrieving Nested Document
     if(!user.Contact){
         return null;
     }
       
+    
     
     return (
         <div className="profile-container" >
@@ -127,7 +213,7 @@ const Profile = ({isLoggedIn, user, logout}) => {
                             </div>
                             <div className="profile-currency">
                                 <AttachMoneyIcon fontSize="small" style={{fill: "orange"}} />
-                                <p> {user.Currency}</p>
+                                <p> {currency}</p>
                                 <Button id="topup-button" size="sm">
                                     Top-Up
                                 </Button>
@@ -141,7 +227,7 @@ const Profile = ({isLoggedIn, user, logout}) => {
                     </div>
                     <div className="profile-currency-mobile">
                         <AttachMoneyIcon fontSize="small" style={{fill: "orange"}} />
-                        <p> {user.Currency}</p>
+                        <p> {currency} </p>
                         <Button id="topup-button" size="sm">
                             Top-Up
                         </Button>
@@ -157,7 +243,7 @@ const Profile = ({isLoggedIn, user, logout}) => {
                         </Box>
                         <TabPanel value={value} index={0}>
                             {/* {user.Username} */}
-                            <ProfileDetails user={user} logout={logout} />
+                            <ProfileDetails user={user} logout={logout} changePass={handleOpen} />
                         </TabPanel>
                         <TabPanel value={value} index={1}>
                             
@@ -165,6 +251,19 @@ const Profile = ({isLoggedIn, user, logout}) => {
                     </Box>
                 </div>
             </div>
+            <ChangeDialog 
+                open={open} 
+                close={handleClose} 
+                isChanged={isChanged} 
+                changedStat={changedStat} 
+                oldPassword={oldPassword} 
+                handleOldPassword={handleOldPassword} 
+                password={password} 
+                handlePassword={handlePassword} 
+                confirmPass={confirmPass} 
+                handleConfirmPassword={handleConfirmPassword} 
+                changePass={changePass}
+            />
         </div>
     )
 }

@@ -1,7 +1,11 @@
 import React, {useState} from 'react'
 import {Button, Form} from 'react-bootstrap';
-import TextField  from '@mui/material/TextField';
 import Axios from 'axios';
+
+import TextField  from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+import { IconButton } from '@material-ui/core';
+import * as Icons from 'react-icons/ai'
 
 import './RegisterForm.css';
 
@@ -13,6 +17,11 @@ const Register = () => {
     const [repassword, setRePass] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
+
+    //Password Toogle
+    const [showPassword, setShowPassword] = useState(false);
+    const handleClickShowPassword = () => setShowPassword(!showPassword);
+    const handleMouseDownPassword = () => setShowPassword(!showPassword);
 
 
     const handleName = (event)=>{
@@ -60,7 +69,7 @@ const Register = () => {
                     setErrorMessage(response.data.message);
                 }else if("success" in response.data){
                     setValid(true);
-                    window.location.href="/";
+                    window.location.href = `/verify/${response.data.user._id}`;
                 }
             })
         }
@@ -75,8 +84,38 @@ const Register = () => {
                         <TextField id="filled" style={{backgroundColor: 'white'}}  className="mt-2"  label="Username" type="text" variant="filled" value={username}  onChange={handleUsername} fullWidth required />
                         <TextField id="filled" style={{backgroundColor: 'white'}} className="mt-2"  label="Email" type="email" variant="filled" value={email} onChange={handleEmail} fullWidth required />
                         <div className="password-field mt-2" >
-                            <TextField id="filled" label="Password" value={password} type="password"  onChange={handlePassword} variant="filled" style ={{width: '50%', backgroundColor: 'white'}} required  />
-                            <TextField id="filled" className="ml-1" value={repassword} label="Confirm Password" type="password"  onChange={handleRePass} variant="filled" style ={{width: '50%', backgroundColor: 'white'}} required/>
+                            <TextField id="filled" label="Password" value={password} onChange={handlePassword} variant="filled" style ={{width: '50%', backgroundColor: 'white'}} required 
+                             type={showPassword ? "text": "password"}
+                             InputProps={{ // <-- This is where the toggle button is added.
+                                 endAdornment: (
+                                   <InputAdornment position="end">
+                                     <IconButton
+                                       aria-label="toggle password visibility"
+                                       onClick={handleClickShowPassword}
+                                       onMouseDown={handleMouseDownPassword}
+                                     >
+                                       {showPassword ?  <Icons.AiFillEye /> :  <Icons.AiFillEyeInvisible />}
+                                     </IconButton>
+                                   </InputAdornment>
+                                 )
+                               }}
+                            />
+                            <TextField id="filled" className="ml-1" value={repassword} label="Confirm Password"  onChange={handleRePass} variant="filled" style ={{width: '50%', backgroundColor: 'white'}} required 
+                             type={showPassword ? "text": "password"}
+                             InputProps={{ // <-- This is where the toggle button is added.
+                                 endAdornment: (
+                                   <InputAdornment position="end">
+                                     <IconButton
+                                       aria-label="toggle password visibility"
+                                       onClick={handleClickShowPassword}
+                                       onMouseDown={handleMouseDownPassword}
+                                     >
+                                       {showPassword ?  <Icons.AiFillEye /> :  <Icons.AiFillEyeInvisible />}
+                                     </IconButton>
+                                   </InputAdornment>
+                                 )
+                               }}
+                            />
                         </div>
                         <TextField id="filled" style={{backgroundColor: 'white'}}  className="mt-2"  label="Phone" type="text" variant="filled" value={phone}  onChange={handlePhone} fullWidth required />
                         <Button variant="primary" id="registerform-submit" className="mt-4 col-12" type="submit">

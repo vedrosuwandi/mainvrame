@@ -1,4 +1,4 @@
-
+// import {useState} from 'react';
 import {Button} from 'react-bootstrap'
 import IconButton from '@mui/material/IconButton';
 
@@ -9,9 +9,9 @@ import BorderColorIcon from '@mui/icons-material/BorderColor';
 
 import './ProfileDetails.css';
 
-const ProfileDetails = ({ user, logout}) => {
+const ProfileDetails = ({ user, logout, changePass}) => {
 
-
+  
     return ( 
         <div className="profiledetails-container">
             <div className="profiledetails-username">
@@ -48,7 +48,7 @@ const ProfileDetails = ({ user, logout}) => {
             <footer className="profiledetails-actions">
                 <div className="profiledetails-actions-wrapper">
                     <div className="profiledetails-changepass">
-                        <Button id="changepass-button">Change Password</Button>
+                        <Button id="changepass-button" onClick={changePass}>Change Password</Button>
                     </div>
 
                     <div className="profiledetails-logout">

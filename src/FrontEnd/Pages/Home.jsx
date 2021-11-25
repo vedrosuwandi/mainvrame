@@ -3,15 +3,22 @@ import Button from '@mui/material/Button';
 
 import '../Style/Home.css';
 import Title from '../Components/Header/Title';
+import Cookies from 'js-cookie';
 
 
-const Home = () => {
-  
+const Home = ({refresh}) => {
+    
+ 
     useEffect(() => {
+        // Check if the the refresh token is exist and access token is not exist
         if(localStorage.getItem("refreshToken") !== null){
+            if(!Cookies.get('token')){
+                refresh()
+            }
             window.location.href = "/dashboard"
         }
-    }, [])
+    }, [refresh])
+
 
     return (
         <div className="home-container">

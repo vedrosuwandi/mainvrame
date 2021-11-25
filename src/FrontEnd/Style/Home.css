@@ -40,7 +40,9 @@
 
 #login-button{
     background-color: rgb(247, 141, 30);
+    color: black;
     padding: 5%;
+    font-family: Cyberverse-bold;
 }
 
 .home-or-border{
@@ -50,7 +52,19 @@
 
 #register-button{
     background-color: rgb(0, 0, 0);
+    color: rgb(247, 141, 30);
     padding: 5%;
+    font-family: Cyberverse-bold;
+}
+
+#register-button:hover{
+    background-color: rgb(247, 141, 30);
+    color: black;
+}
+
+#login-button:hover{
+    background-color: rgb(0, 0, 0);
+    color: rgb(247, 141, 30);
 }
 
 

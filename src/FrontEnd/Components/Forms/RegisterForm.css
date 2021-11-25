@@ -41,6 +41,15 @@
 	padding-top: 5px;
 }
 
+.registerform-login a{
+	color: rgb(51,102,187);
+}
+
+.registerform-back{
+	margin-top: 30px;
+	/* border: 1px solid black; */
+}
+
 @media only screen and (max-width : 900px){
 	.registerform-wrapper{
 		width: 60%;

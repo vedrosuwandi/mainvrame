@@ -1,0 +1,91 @@
+.verify-container{
+    height: 100vh;
+    width: 100%;
+    
+}
+
+.verify-wrapper{
+    margin: 5% 30%;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid black;
+}
+
+.verify-title{
+    padding: 10px;
+}
+
+.verify-content{
+    padding: 10px;
+    padding-bottom: 0;
+    /* border: 1px solid black; */
+}
+
+.verify-content span{
+    font-weight: bold;
+}
+
+.verify-timer{
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 30%;
+    color: grey;
+    /* border: 1px solid black; */
+}
+
+.verify-timer-content{
+    position: absolute;
+    right: 0;
+    margin-right: 10px;
+    text-decoration: underline;
+}
+
+.verify-resend{
+    display: flex;
+    margin-top: 10px;
+    justify-content: flex-end;
+    /* border: 1px solid black; */
+}
+
+.verify-resend Button{
+    background-color: rgb(247, 141, 30);
+    color: black;
+}
+
+.verify-resend Button:hover{
+    background-color: black ;
+    color: rgb(247, 141, 30);
+}
+
+.verify-resend Button:active{
+    background-color: rgb(247, 141, 30);
+    color: black;
+}
+
+.verify-return{
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    /* border: 1px solid black; */
+}
+
+
+.verify-return a{
+    text-decoration: none;
+}
+
+/*Mobile*/
+@media only screen and (max-width : 425px){
+    
+    .verify-wrapper{
+        margin: 10% 5%;
+        padding: 10px;
+    }
+
+    .verify-timer-content{
+        font-size: 15px;
+    }
+
+  
+}
