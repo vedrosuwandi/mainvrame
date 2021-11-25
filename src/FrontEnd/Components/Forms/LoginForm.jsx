@@ -53,7 +53,8 @@ const LoginForm = () => {
                 Cookies.set("token" , response.data.token);
                 localStorage.setItem("refreshToken" , response.data.refreshToken);
                 //Go to Home page
-                window.location.href='/dashboard'
+                window.location.href='/dashboard';
+                
             }
         })
     }
