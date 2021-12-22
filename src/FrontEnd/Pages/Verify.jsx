@@ -46,8 +46,9 @@ const Verify = () => {
         },1000)
     }
 
+    // Send link
     const sendlink = ()=>{
-        axios.post(`http://localhost:3003/verify/send/${id}`)
+        axios.post(`${localStorage.getItem("localhost")}/verify/send/${id}`)
         .then((response)=>{
             // console.log(response)
         }).catch((err)=>{
@@ -57,7 +58,7 @@ const Verify = () => {
     
     // Reload the page for re sending the link
     const reload = ()=>{
-        axios.get(`http://localhost:3003/user/getstatus/${id}`)
+        axios.get(`${localStorage.getItem("localhost")}/user/getstatus/${id}`)
         .then((response)=>{
             if(!response.data.user[0].Verify){
                 setOpen(true);
@@ -81,8 +82,9 @@ const Verify = () => {
             return 
         }
         // get the data to do the verification
-        axios.get(`http://localhost:3003/verify/${id}`)
+        axios.get(`${localStorage.getItem("localhost")}/verify/${id}`)
         .then((response)=>{
+            // if there is no user
             if(response.data.user.length === 0){
                 window.location.href = "/";
             }else{

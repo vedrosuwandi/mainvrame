@@ -1,0 +1,132 @@
+.friend-container{
+    width: 100%;
+    height: calc(100vh - 30vh);
+    overflow: auto;
+}
+
+.friends-card{
+    display: flex;
+    height: 9vh;
+    margin: 20px;
+    border-radius: 10px;
+    border: 1px solid black;
+    box-shadow: 0 5px #999;
+}
+
+.friends-card:hover{
+    cursor: pointer;
+}
+
+.friends-card:active{
+    transform: translateY(5px);
+    box-shadow: none;
+}
+
+.friends-avatar{
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    margin: 5px 20px;
+}
+
+.friends-avatar-container{
+    overflow: hidden;
+    border-radius: 50%;
+    border: 3px solid ;
+    height: 100%;
+}
+
+.friends-details{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    width: calc(100vw - 9%);
+}
+
+.friends-status{
+    display: flex;
+    align-items: center;
+}
+
+.friends-name{
+    overflow: hidden;
+    align-self: center;
+    margin-right: auto;
+    font-size: large;
+    /* border: 1px solid black; */
+}
+
+
+.friends-action{
+   display: flex;
+   margin-left: auto;
+   align-items: center;
+   /* border: 1px solid black; */
+   z-index: 5;
+}
+
+.friends-action-mobile{
+    display: none;
+}
+
+#action-icon-accept,  #action-icon-reject{
+    transform: scale(2);
+}
+
+#action-icon-chat , #action-icon-delete, #action-icon-reverse{
+    transform: scale(1.3);
+}
+
+@media only screen and (max-width : 426px){
+    .friend-container{
+        height: calc(100vh - 40vh);
+        width: 100%;
+    }
+
+    
+    .friends-card{
+        margin: 0px;
+        margin-top: 10px;
+    }
+  
+    
+    .friends-avatar{
+        margin: 5px 0px;
+        flex: 1;
+    }
+
+    
+    .friends-name{
+        font-size: medium;
+        white-space: nowrap;
+        flex: 2;
+    }
+
+    .friends-action{
+        display: none;
+    }
+
+    .friends-action-mobile{
+        display: flex;
+        align-items: center;
+        margin-right: 10px;
+    }
+
+    /* #action-icon-accept,  #action-icon-reject{
+        transform: scale(1.5);
+    }
+
+    #action-icon-chat , #action-icon-delete{
+        transform: scale(1.2);
+    } */
+
+    .friends-details{
+        width: 75%;
+        flex-direction: column;
+    }
+
+    .friends-status{
+        margin-right: auto;
+    }
+   
+}

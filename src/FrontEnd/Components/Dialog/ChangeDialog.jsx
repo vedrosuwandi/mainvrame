@@ -73,7 +73,6 @@ const ChangeDialog = ({open, close, isChanged, changedStat, oldPassword, handleO
                         }}
                     />
                     <TextField
-                        autoFocus
                         margin="dense"
                         id="name"
                         label="New Password"
@@ -97,7 +96,6 @@ const ChangeDialog = ({open, close, isChanged, changedStat, oldPassword, handleO
                         }}
                     />
                     <TextField
-                        autoFocus
                         margin="dense"
                         id="name"
                         label="Confirm Password"

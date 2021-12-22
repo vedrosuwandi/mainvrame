@@ -1,5 +1,6 @@
 .profiledetails-container{
     width: 100%;
+    padding: 3%;
     /* border: 1px solid black; */
 }
 
@@ -17,6 +18,7 @@
 
 .profiledetails-username-edit, .profiledetails-email-edit ,.profiledetails-phone-edit{
     margin-left: auto;
+    display: flex;
     /* border: 1px solid black; */
 }
 
@@ -52,6 +54,9 @@
 
 @media only screen and (max-width: 425px){
    
+    .profiledetails-container{
+        padding: 10px;
+    }
     
     .profiledetails-username, .profiledetails-email{
         display: flex;

@@ -1,0 +1,177 @@
+
+input[type="file"] {
+    display: none;
+}
+
+.users-container{
+    width: 100%;
+    height: 100vh;
+}
+
+.users-wrapper{
+    width: 100%;
+    height: 100%;
+    /* border: 2px solid blue; */
+}
+
+.users-details-mobile{
+    display: none;
+}
+
+
+/*Profile Pic*/
+.users-pic{
+    position: relative;
+    display: block;
+    height: 35%;
+    /* border: 1px solid black; */
+}
+
+/*Banner Image*/
+.users-banner-container{
+    position: relative;
+    display: flex;
+    align-items: center;
+    top: 0;
+    height: 65%;
+    width: 100%;
+    background-color: rgb(211,211,211, 0.7);   
+    overflow: hidden;
+    /* border: 1px solid red; */
+}
+
+.users-banner-container img{
+    width: 100vw;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+/*Avatar Image*/
+.users-avatar-wrapper{
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    height: 60%;
+    width: 100%;
+    /* border: 1px solid blue; */
+}
+
+.users-avatar-image{
+    width: 20%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    padding: 0 5%;
+    /* border: 1px solid black; */
+}
+
+
+.users-avatar-wrap{
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    border-radius: 50%;
+    border: 1px solid black;
+}
+
+.users-avatar-wrap img{
+    width: 100%;
+    height: 100%;
+}
+
+
+.users-details-mobile{
+    display: none;
+}
+
+.users-actions{
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 10px;
+}
+  
+/* Content */
+.users-details{
+    position: absolute;
+    right: 0;
+    width: 80%;
+    top: 40%;
+    padding-left: 10px;
+    /* border: 1px solid black; */
+}
+
+
+@media only screen and (max-width : 900px){
+    .users-avatar-image{
+        width: 30%;
+    }
+ 
+    .users-details{
+        width: 70%;
+    }
+
+}
+
+/*Mobile*/
+@media only screen and (max-width: 430px) {
+    .users-mobile{
+        display: flex;  
+    }
+
+    /*Profile Image*/
+    .users-pic{
+        height: 25%;
+    }
+
+    .users-image{
+        position: absolute;
+        top: 0;
+        height: 70%; 
+    }
+
+   
+    .users-avatar-wrapper{
+        display: flex;
+        position: absolute;
+        justify-content: center;
+        bottom: 0;
+        height: 61%;
+        width: 100%;
+        overflow: hidden;
+        /* border: 1px solid black; */
+    }
+    
+    .users-avatar-image{
+        padding: 0;
+    }
+
+
+    /* Profile Content */
+
+    .users-details{
+        display: none;
+    }
+
+    .users-details-mobile{
+        display: contents;
+        margin-top: 10px;
+        width: 100%;
+        /* border: 1px solid black; */
+    }
+    
+    .users-name-mobile{
+        text-align: center;
+    }
+    
+}
+
+@media only screen and (max-width : 320px){
+
+}
+
+@font-face {
+    font-family: "Cyberverse";
+    src: url('../Assets/Cyberverse/Cyberverse.otf');
+}

@@ -57,20 +57,24 @@ const Register = () => {
             setValid(false);
             setErrorMessage("Password does not Match");
         }else{
-            Axios.post("http://localhost:3003/auth/register" , {
+            Axios.post(`${localStorage.getItem("localhost")}/auth/register` , {
                 "Name" : name,
                 "Username" : username,
                 "Password" : password,
                 "Email" : email,
                 "Phone" : phone
             }).then((response)=>{
+                // if the register is failed
                 if("message" in response.data){
                     setValid(false);
                     setErrorMessage(response.data.message);
                 }else if("success" in response.data){
+                    // set the alert message (success) and redirect to the verify page
                     setValid(true);
                     window.location.href = `/verify/${response.data.user._id}`;
                 }
+            }).catch((err)=>{
+                // Error Handling
             })
         }
     }

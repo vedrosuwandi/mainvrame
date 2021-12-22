@@ -34,7 +34,7 @@ const LoginForm = () => {
     //calls the API request (login)
     const login = async (event)=>{
         event.preventDefault();
-        await axios.post('http://localhost:3003/auth/login', {
+        await axios.post(`${localStorage.getItem("localhost")}/auth/login`, {
             "Username" : username,
             "Password" : password
         }).then((response) => {
@@ -79,7 +79,7 @@ const LoginForm = () => {
     };
 
    const sendlink =  async ()=>{
-        await axios.post('http://localhost:3003/user/sendlink', {
+        await axios.post(`${localStorage.getItem("localhost")}/user/sendlink`, {
             "Email" : email
         })
         .then((response)=>{

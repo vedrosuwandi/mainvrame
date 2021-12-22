@@ -11,42 +11,82 @@ import Dashboard from './FrontEnd/Pages/Dashboard';
 import Profile from './FrontEnd/Pages/Profile';
 import Verify from './FrontEnd/Pages/Verify';
 import ResetPassword from './FrontEnd/Pages/ResetPassword';
+import Friends from './FrontEnd/Pages/Friends';
+import Users from './FrontEnd/Pages/Users';
 
 //Splash
 import Verified from './FrontEnd/Components/Splash/Verified';
+import OnlineError from './FrontEnd/Components/Dialog/OnlineErrorDialog';
+localStorage.setItem("localhost", 'http://localhost:3003');
 
 
 function App() {
     const [isLoggedIn , setLoggedIn ]= useState(false);
     const [user, setUser] = useState({});
-    
+    const [requestCount , setrequestCount] = useState();
+
     // check whether the user is login or not when the page is rendering
     useEffect(()=>{
         getUserData(Cookies.get("token"));
         // eslint-disable-next-line  
     },[])
 
-    //Get the data if the user is logged in
+    //Open Dialog handler when Another User is logged In
+    const [open, setOpen] = useState(false);
+
+    const handleOpen = () => {
+        setOpen(true);
+      };
+    
+      const handleClose = () => {
+        setOpen(false);
+        logOut();
+      };
+    
+  
     const getUserData = (token) =>{
-        axios.get('http://localhost:3003/user/getuser',{
+        // Check if there is another user is Logged In
+        axios.get(`${localStorage.getItem('localhost')}/online/checktoken`, {
             headers : {
-                Authorization : "Bearer " + token,
-        }
-        })
-        .then((response)=>{
-            //If the user is not log in
-            if(response.data.message === "Authentication Failed!"){
-                setLoggedIn(false);
-            }else{
-                setUser(response.data.mydata);
-                setLoggedIn(true);
+                Authorization : "Bearer " + localStorage.getItem('refreshToken')
             }
-        }).catch((err)=>{
-            if(err.response.status === 401){
-                if(err.response.data.message === "Access Token Expired"){
-                    refresh()
+        }).then((response)=>{
+              //Get the data if the user is logged in
+            axios.get(`${localStorage.getItem('localhost')}/user/getuser`,{
+                headers : {
+                    Authorization : "Bearer " + token,
+            }
+            })
+            .then((response)=>{
+                //If the user is not log in
+                if(response.data.message === "Authentication Failed"){
+                    if(localStorage.getItem('refreshToken')){
+                        refresh();
+                        window.location.reload();
+                    }
+                    setLoggedIn(false);
+    
+                }else{
+                    countRequest(token)
+                    setUser(response.data.mydata);
+                    setLoggedIn(true);
                 }
-                setLoggedIn(false);
+            }).catch((err)=>{
+                if(err.response.status === 401){
+                    if(err.response.data.message === "Access Token Expired"){
+                        refresh()
+                    }
+                    setLoggedIn(false);
+                }
+            })
+        }).catch((err)=>{
+            // If there is another User Logged In
+            if(err.response.status === 401){
+                if(err.response.data.message === "Refresh Token Expired"){
+                    logOut();
+                }else{
+                    handleOpen()
+                }
             }
         })
     }
@@ -54,7 +94,7 @@ function App() {
 
     //refresh the access token as it is expired
     const refresh = ()=>{
-        axios.get('http://localhost:3003/auth/refresh' , {
+        axios.get(`${localStorage.getItem('localhost')}/auth/refresh` , {
             headers : {
                 Authorization : "Bearer " + localStorage.getItem("refreshToken")
             }
@@ -84,7 +124,19 @@ function App() {
     //     }
     //     return value.toString();
     // }
-    
+
+   
+    const countRequest = (token)=>{
+        axios.get(`${localStorage.getItem('localhost')}/user/countrequest`, {
+            headers : {
+                Authorization : "Bearer " + token
+            }
+        }).then((response)=>{
+            setrequestCount(response.data.count);
+        }).catch((err)=>{
+            console.log(err)
+        })
+    }
 
     const logOut = ()=>{
         Cookies.remove("token");
@@ -103,13 +155,16 @@ function App() {
                 <Route exact path="/" render={() => <Home refresh={refresh} />}/>
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/register" component={Register} />
-                <Route exact path="/dashboard" render={()=> <Dashboard isLoggedIn={isLoggedIn} user={user} logout={logOut}  /> } />
-                <Route exact path="/profile" render={()=> <Profile isLoggedIn={isLoggedIn} user={user} logout={logOut} /> } />
+                <Route exact path="/dashboard" render={()=> <Dashboard isLoggedIn={isLoggedIn} user={user} logout={logOut} /> } />
+                <Route exact path="/profile" render={()=> <Profile refresh={refresh} isLoggedIn={isLoggedIn} user={user} logout={logOut} /> } />
+                <Route exact path="/friends" render={()=> <Friends user={user} countRequest={requestCount} logout={logOut} />} />
                 <Route exact path="/verify/:id"  component={Verify} />
                 <Route exact path="/verified/:code"  component={Verified} />
                 <Route exact path="/resetpass/:code" component={ResetPassword}  />
+                <Route exact path="/users/:username" render={()=> <Users user={user} logout={logOut} />} />
             </Switch>
         </Router>
+        <OnlineError open={open} handleClose={handleClose}/>
     </div>
   );
 }

@@ -6,6 +6,7 @@ import axios from 'axios';
 
 import "../Style/Dashboard.css";
 import Cookies from 'js-cookie';
+import OnlineError from '../Components/Dialog/OnlineErrorDialog';
 
 
 // create new unity content 
@@ -20,14 +21,13 @@ const Dashboard = ({user, logout}) => {
 
     //Initialize
     useEffect(()=>{
-
         //Check if the access token is exist
         if(localStorage.getItem("refreshToken") === null){
             window.location.href="/"
         }else{
             setCurrency(user.Currency);
         }
-    },[user.Currency])
+    },[user.Currency, logout])
 
 
     // render when the currency is changed
@@ -116,33 +116,71 @@ const Dashboard = ({user, logout}) => {
         return value.toString();
     }
 
+
+     //Open Dialog handler when Another User is logged In
+     const [open, setOpen] = useState(false);
+
+     const handleOpen = () => {
+         setOpen(true);
+       };
+     
+       const handleClose = () => {
+         setOpen(false);
+         logout();
+       };
+     
+
+
     // add user Currency
     const addpoint = async (amount)=>{
-        await axios.post('http://localhost:3003/user/addpoint' , {
-            Amount : amount
-        },{
+        //check if the other user is loggedIn
+        await axios.get(`${localStorage.getItem("localhost")}/online/checktoken` , {
             headers : {
-                Authorization : 'Bearer ' + Cookies.get('token')
+                Authorization : 'Bearer ' + localStorage.getItem('refreshToken')
             }
         }).then((response)=>{
-            setCurrency(response.data.user.Currency);
+            // add point
+            axios.post(`${localStorage.getItem("localhost")}/user/addpoint` , {
+                Amount : amount
+            },{
+                headers : {
+                    Authorization : 'Bearer ' + Cookies.get('token')
+                }
+            }).then((response)=>{
+                setCurrency(response.data.user.Currency);
+            }).catch((err)=>{
+                console.log(err);
+            })
         }).catch((err)=>{
-            console.log(err);
+            if(err.response.status === 401){
+                handleOpen();
+            }
         })
+       
     }
 
     // subtract user currency
     const subtractpoint = async (amount) =>{
-        await axios.post('http://localhost:3003/user/subtractpoint' , {
-            Amount : amount
-        }, {
+        await axios.get(`${localStorage.getItem("localhost")}/online/checktoken` , {
             headers : {
-                Authorization : 'Bearer ' + Cookies.get('token')
+                Authorization : 'Bearer ' + localStorage.getItem('refreshToken')
             }
         }).then((response)=>{
-            setCurrency(response.data.user.Currency);
+            axios.post(`${localStorage.getItem("localhost")}/user/subtractpoint` , {
+                Amount : amount
+            }, {
+                headers : {
+                    Authorization : 'Bearer ' + Cookies.get('token')
+                }
+            }).then((response)=>{
+                setCurrency(response.data.user.Currency);
+            }).catch((err)=>{
+                console.log(err);
+            })
         }).catch((err)=>{
-            console.log(err);
+            if(err.response.status === 401){
+                handleOpen()
+            }
         })
     }
 
@@ -157,13 +195,14 @@ const Dashboard = ({user, logout}) => {
         <div className="dashboard-container">
             <div className="dashboard-wrapper">
                 <div className="dashboard-nav">
-                    <Navbar user={user} logout={logout} />
+                    <Navbar user={user} logout={logout} showSearchbar={false} />
                 </div>
                 <div className="dashboard-content">
                     {/* {user.Contact.Email} */}
                     <Unity unityContent={unityContent} width="100%" height="100%" />
                 </div>
             </div>
+            <OnlineError open={open} handleClose={handleClose} />
         </div>
     )
 }
