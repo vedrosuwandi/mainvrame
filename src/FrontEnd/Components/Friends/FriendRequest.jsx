@@ -6,11 +6,12 @@ import Cookies from 'js-cookie';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import Stack from '@mui/material/Stack';
+import Snackbar from '@mui/material/Snackbar';
 
 import IconButton from '@mui/material/IconButton';
 
 
-const FriendRequest = ({user }) => {
+const FriendRequest = ({user , refresh}) => {
 
     const [requests, setRequests] = useState([]);
 
@@ -18,16 +19,30 @@ const FriendRequest = ({user }) => {
 
     const [message , setMessage] = useState(null);
 
+    const [open, setOpen] = useState(false);
+
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+        return;
+        }
+        setOpen(false);
+    };
+
     useEffect(()=>{
         user.PendingReceive.forEach((key, index)=>{
             axios.get(`${localStorage.getItem('localhost')}/user/getfriend/${key._id}`)
             .then((response)=>{
                 setRequests(prevState => [...prevState, response.data.response])
-            }).catch((error)=>{
-                console.log(error)
+            }).catch((err)=>{
+                if(err.response.status === 401){
+                    if(err.response.data.message === "Access Token Expired"){
+                        refresh();
+                    }
+                }
             })
         })
-    },[ user.PendingReceive])
+    },[ user.PendingReceive, refresh])
 
  
     const accept = (id)=>{
@@ -41,6 +56,7 @@ const FriendRequest = ({user }) => {
             }
         } )
         .then((response)=>{
+            setOpen(true);
             setStatus(true);
             setMessage(response.data.message);
             setTimeout(()=>{
@@ -61,6 +77,7 @@ const FriendRequest = ({user }) => {
             }
         } )
         .then((response)=>{
+            setOpen(true);
             setStatus(false);
             setMessage(response.data.message);
             setTimeout(()=>{
@@ -80,20 +97,26 @@ const FriendRequest = ({user }) => {
                 <></>
                 :
                 status ? 
-                <Alert severity="success">{`${message}`}</Alert>
+                <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                    <Alert severity="success">{`${message}`}</Alert>
+                </Snackbar>
                 :
-                <Alert severity="error">{`${message}`}</Alert>
+                <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                    <Alert severity="error">{`${message}`}</Alert>
+                </Snackbar>
             }
             {requests.map((key, index)=>{
                 return(
                     <div className="friends-card" key={index}>
                         <div className="friends-avatar">
-                            <img src={`${localStorage.getItem('localhost')}/user/getavatar/${key._id}`} alt="avatar" />
+                            <div className="friends-avatar-container">
+                                <img src={`${localStorage.getItem('localhost')}/user/getavatar/${key._id}`} alt="avatar" />
+                            </div>
                         </div>
                         <div className="friends-name">
                             {key.Name}
                         </div>
-                        <div className="friends-action">
+                        <div className="friendrequest-action" style={{display:'flex' , marginLeft:"auto" , alignItems:"center"}}>
                             <Stack spacing={1} direction="row">
                                 <div className="friends-accept" >
                                     <IconButton
@@ -101,15 +124,18 @@ const FriendRequest = ({user }) => {
                                         edge="start"
                                         color="inherit"
                                         aria-label="open drawer"
-                                    
+
                                         sx={{
                                             mr:{
                                                 sm : '20px',
-                                                xs : '10px'
+                                                xs : '5px'
                                             },
                                             
                                         }}
-                                        onClick={() => accept(key._id)}
+                                        onClick={(event) => {
+                                            event.stopPropagation();
+                                            accept(key._id);
+                                        }}
                                     >
                                         
                                         <CheckCircleIcon id="action-icon-accept" sx={{  color: "green"}} />
@@ -129,7 +155,10 @@ const FriendRequest = ({user }) => {
                                             },
                                             
                                         }}
-                                        onClick={(id) => reject(key._id)}
+                                        onClick={(event) => {
+                                            event.stopPropagation();
+                                            reject(key._id);
+                                        }}
                                     >
                                         <CancelIcon id="action-icon-reject" sx={{ color: "red"}} />
                                     </IconButton>

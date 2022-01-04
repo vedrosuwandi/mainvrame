@@ -10,7 +10,8 @@ import IconButton from '@mui/material/IconButton';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import ChatIcon from '@mui/icons-material/Chat';
 import DeleteIcon from '@mui/icons-material/Delete';
-
+import NotInterestedOutlinedIcon from '@mui/icons-material/NotInterestedOutlined';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 import ActionDialog from "../Components/Dialog/ActionDialog";
 import Navbar from '../Components/Header/Navbar';
@@ -18,17 +19,18 @@ import '../Style/Users.css'
 
 
 
-const Users = ({user, logout}) => {
+const Users = ({user, logout, refresh}) => {
     const { username } = useParams(); 
 
     const [data, setData] = useState({});
 
     const [friendstatus , setfriendStatus] = useState({});
 
-    const [requestalert, setrequestAlert] = useState(false);
+    const [requestalert, setrequestAlert] = useState(null);
 
 
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+
     const [name , setName] =useState(null);
     const [ID , setID] = useState(null);
     const [status, setStatus] = useState(null);
@@ -45,25 +47,30 @@ const Users = ({user, logout}) => {
     }
 
  
+    const [openBlacklistDialog, setOpenBlacklistDialog] = useState(false);
 
-    const deletefriend = ()=>{
-        axios.post(`${localStorage.getItem('localhost')}/user/removefriend/${ID}`, {
-            id : ID
-        }, {
-            headers : {
-                Authorization : 'Bearer ' + Cookies.get('token')
-            }
-        }).then((response)=>{
-            setStatus(true)
-            setMessage(response.data.message)
-            handleCloseRemove();
-            setTimeout(()=>{
-                window.location.reload()
-            },1000)
-        }).catch((err)=>{
-            console.log(err.message)
-        })
+    const handleOpenBlacklist = (id, name)=>{
+        setOpenBlacklistDialog(true)
+        setName(name)
+        setID(id)
     }
+
+    const handleCloseBlacklist = ()=>{
+        setOpenBlacklistDialog(false);
+    }
+
+    const [openReverseDialog, setOpenReverseDialog] = useState(false);
+
+    const handleOpenReverse = (id, name)=>{
+        setOpenReverseDialog(true)
+        setName(name)
+        setID(id)
+    }
+
+    const handleCloseReverse = ()=>{
+        setOpenReverseDialog(false);
+    }
+
 
     useEffect(()=>{
         axios.get(`${localStorage.getItem('localhost')}/user/getdetails/${username}`)
@@ -101,12 +108,35 @@ const Users = ({user, logout}) => {
     const friend_action = () =>{
         return(
             <Stack spacing={1} direction="row" >
-                <IconButton
-                    color="primary"
-                    title="Chat"
-                >
-                    <ChatIcon />
-                </IconButton>
+                {
+                    Boolean(friendstatus.Blacklisted)  ?
+                    <IconButton
+                        color="success"
+                        title="Cancel Blacklist"
+                        onClick={()=> handleOpenReverse(data._id, data.Name)}
+                    >
+                        <CheckCircleOutlineIcon />
+                    </IconButton>
+
+                    :
+                    <>
+                        <IconButton
+                            color="primary"
+                            title="Chat"
+                        >
+                            <ChatIcon />
+                        </IconButton>
+
+                        <IconButton
+                            color="error"
+                            title="Blacklist"
+                            onClick={()=> handleOpenBlacklist(data._id, data.Name)}
+                        >
+                            <NotInterestedOutlinedIcon color="error" />
+                        </IconButton>
+                    </>
+                }
+
                 <IconButton
                     color="error"
                     title="Remove Friend"
@@ -114,6 +144,7 @@ const Users = ({user, logout}) => {
                 >
                     <DeleteIcon />
                 </IconButton>
+
             </Stack>
         )
     }
@@ -127,33 +158,126 @@ const Users = ({user, logout}) => {
     const notfriend_action = () =>{
         return(
             <Stack spacing={1} direction="row" >
-                <IconButton
-                    color="primary"
-                    onClick={sendrequest}
-                    title="Send Friend Request"
-                >
-                    <PersonAddAlt1Icon />
-                </IconButton>
+                {
+                    Boolean(friendstatus.Blacklisted) 
+                    ?
+                    <IconButton
+                        color="success"
+                        title="Cancel Blacklist"
+                        onClick={()=> handleOpenReverse(data._id, data.Name)}
+                    >
+                        <CheckCircleOutlineIcon />
+                    </IconButton>
+                    :
+                    <>
+                        <IconButton
+                        color="primary"
+                        onClick={sendrequest}
+                        title="Send Friend Request"
+                        >
+                            <PersonAddAlt1Icon />
+                        </IconButton>
+
+                        <IconButton
+                            color="error"
+                            title="Blacklist"
+                            onClick={()=> handleOpenBlacklist(data._id, data.Name)}
+                        >
+                            <NotInterestedOutlinedIcon color="error" />
+                        </IconButton>
+                    </>
+                }
             </Stack>
         )
     }
 
+
+
     const sendrequest = () =>{
-        axios.post(`${localStorage.getItem('localhost')}/user/sendrequest/${data._id}` , {
-            id : data._id
+        if(friendstatus.Blacklisted){
+            setrequestAlert(false)
+            setTimeout(()=>{
+                setrequestAlert(null)
+            },1000);
+        }else{
+            axios.post(`${localStorage.getItem('localhost')}/user/sendrequest/${data._id}` , {
+                id : data._id
+            }, {
+                headers : {
+                    Authorization : "Bearer " + Cookies.get('token')
+                }
+            }).then((response)=>{
+                setrequestAlert(true);
+                setTimeout(()=>{
+                    window.location.reload()
+                },1000);
+            }).catch((err)=>{
+                console.log(err)
+            })
+        }
+    }
+    
+    const deletefriend = ()=>{
+        axios.post(`${localStorage.getItem('localhost')}/user/removefriend/${ID}`, {
+            id : ID
+        }, {
+            headers : {
+                Authorization : 'Bearer ' + Cookies.get('token')
+            }
+        }).then((response)=>{
+            setStatus(true)
+            setMessage(response.data.message)
+            handleCloseRemove();
+            setTimeout(()=>{
+                window.location.reload()
+            },1000)
+        }).catch((err)=>{
+            console.log(err.message)
+        })
+    }
+
+    /* Blacklist Friend */
+    const blacklist = async (id) =>{
+        await axios.post(`${localStorage.getItem('localhost')}/user/blacklist`, {
+            ID : id
         }, {
             headers : {
                 Authorization : "Bearer " + Cookies.get('token')
             }
         }).then((response)=>{
-            setrequestAlert(true);
+            setStatus(true);
+            setMessage(response.data.message);
             setTimeout(()=>{
-                window.location.reload()
-            },1000);
+                window.location.reload();
+            }, 1000);
+        }).catch((err)=>{
+            if(err.response.status === 401){
+                if(err.response.data.message === "Access Token Expired"){
+                    refresh();
+                }
+            }
+        })
+    }
+
+    /* Cancel Blacklist Function */
+    const reverseBlacklist = async (id) =>{
+        await axios.post(`${localStorage.getItem('localhost')}/user/reverseblacklist`, {
+            ID : id
+        }, {
+            headers : {
+                Authorization : "Bearer " + Cookies.get('token')
+            }
+        }).then((response)=>{
+            setStatus(false);
+            setMessage(response.data.message);
+            setTimeout(()=>{
+                window.location.reload();
+            }, 1000);
         }).catch((err)=>{
             console.log(err)
         })
     }
+    
 
     return (
         <div className="users-container">
@@ -167,10 +291,13 @@ const Users = ({user, logout}) => {
                 <Alert severity="success">{`${message}`}</Alert>
             }
             {
+                requestalert === null ? 
+                <></>
+                :
                 requestalert ? 
                 <Alert severity="success">Friend Request Has been sent to {data.Name}</Alert>
                 :
-                <></>
+                <Alert severity="error">You have been blocked by {data.Name}</Alert>
             }
             <div className="users-wrapper">
                 <div className="users-headers">
@@ -194,12 +321,15 @@ const Users = ({user, logout}) => {
                             </div>
                             <div className="users-actions">
                                 {
+                                    Boolean(friendstatus.Blacklist) ? 
+                                    <></>
+                                    :
                                     Boolean(friendstatus.Friends) ? 
                                         friend_action()
                                     :
                                     Boolean(friendstatus.PendingReceive) ? 
                                         pending_action()
-                                    : 
+                                    :
                                         notfriend_action()
                                 }
                             </div>
@@ -211,20 +341,26 @@ const Users = ({user, logout}) => {
                         <h1>{data.Name}</h1> 
                     </div>
                     <div className="users-actions">
-                    {
-                        Boolean(friendstatus.Friends) ? 
-                        friend_action()
-                        :
-                        Boolean(friendstatus.PendingReceive) ? 
-                        pending_action()
-                        : 
-                        notfriend_action()
+                        {
+                            Boolean(friendstatus.Blacklist) ? 
+                                <></>
+                            :
+                            Boolean(friendstatus.Friends) ? 
+                                friend_action()
+                            :
+                            Boolean(friendstatus.PendingReceive) ? 
+                                pending_action()
+                            :
+                                notfriend_action()
                         }
                     </div>
                 </div>
             </div>
 
-          
+            {/* Open Reverse Blacklist Dialog */}
+            <ActionDialog open={openReverseDialog} handleClose={handleCloseReverse} message={`Do you want to Cancel Blacklist on ${name} ?`} action={()=>{reverseBlacklist(ID)}}/>           
+            {/* Dialog for Blacklist */}
+            <ActionDialog open={openBlacklistDialog} handleClose={handleCloseBlacklist} message={`Do you want to Blacklist ${name}`} action={()=>blacklist(ID)} />
             {/* Remove friend Dialog */}
             <ActionDialog open={openDeleteDialog} handleClose={handleCloseRemove} message={`Are you sure want to remove ${name} from your friend list ?`} action={deletefriend} />
         </div>

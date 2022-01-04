@@ -211,7 +211,11 @@ const Navbar = ({user, logout, showSearchbar}) => {
     const [openSidebar, setSidebar] = useState(false);
 
     const toggleDrawer = (anchor, open) => (event) => {
-      if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+      if (
+        event &&
+        event.type === 'keydown' &&
+        (event.key === 'Tab' || event.key === 'Shift')
+      ) {
         return;
       }
   

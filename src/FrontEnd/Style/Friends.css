@@ -7,7 +7,7 @@
 .friends-card{
     display: flex;
     height: 9vh;
-    margin: 20px;
+    margin: 15px;
     border-radius: 10px;
     border: 1px solid black;
     box-shadow: 0 5px #999;
@@ -112,13 +112,13 @@
         margin-right: 10px;
     }
 
-    /* #action-icon-accept,  #action-icon-reject{
+    #action-icon-accept,  #action-icon-reject{
         transform: scale(1.5);
     }
 
-    #action-icon-chat , #action-icon-delete{
+    /* #action-icon-chat , #action-icon-delete{
         transform: scale(1.2);
-    } */
+    }  */
 
     .friends-details{
         width: 75%;

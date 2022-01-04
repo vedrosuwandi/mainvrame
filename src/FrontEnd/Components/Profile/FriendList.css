@@ -4,14 +4,14 @@
 }
 
 .friendlist-wrapper-container{
-   height: calc(100vh - 60vh);
+   height: calc(100vh - 63vh);
    /* border: 2px solid blue;  */
-   overflow: auto;
+   overflow: hidden;
 }
 
 .friendlist-wrapper{
     display: grid;
-    grid-template-columns: auto auto auto auto auto;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-gap: 20px;
     padding: 25px;
 }
@@ -20,23 +20,26 @@
     position: relative;
     height: 30vh;
     border: 1px solid black;
-    box-shadow: 5px 10px 5px grey;
+    box-shadow: 5px 6px 5px grey;
     border-radius: 10px;
     overflow: hidden;
 }
 
+.friendlist-item:active{
+    box-shadow: none;
+    transform: translateY(10px);
+}
 
 .friendlist-avatar{
-    position: relative;
+    display: flex;
+    justify-content: center;
     height: 75%;
-    overflow: hidden;
     padding: 20px;
+    overflow: hidden;
 }
 
 .friendlist-avatar-container{
-    position: absolute;
-    height: 80%;
-    width: 50%;
+    height: 100%;
     left: 25%;
     right: 25%;
     border-radius: 50%;
@@ -54,12 +57,21 @@
     /* border: 1px solid black; */
 }
 
+.friendlist-paginate{
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+
 @media only screen and (max-width: 900px){
     .friendlist-wrapper{
         display: grid;
-        grid-template-columns: auto auto auto;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
     }
-    
+     .friendlist-item{
+        height: 25vh;
+    }
+
 }
 
 @media only screen and (max-width: 426px) {
@@ -69,18 +81,16 @@
     } 
     
     .friendlist-item{
-        height: 20vh;
+        height: 15vh;
     }
 
     .friendlist-avatar{
-        padding: 10px;
+        padding: 5px;
     }
 
     .friendlist-avatar-container{
-        height: 80%;
-        width: 60%;
-        left: 20%;
-        right: 20%;
+        left: 25%;
+        right: 25%;
     }
     
     .friendlist-name{

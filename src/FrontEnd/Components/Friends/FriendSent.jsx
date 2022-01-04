@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-const FriendSent = ({user}) => {
+const FriendSent = ({user, refresh}) => {
 
     const [requestsent, setRequestSent] = useState([]);
 
@@ -11,17 +11,24 @@ const FriendSent = ({user}) => {
             .then((response)=>{
                 setRequestSent(prevState =>[...prevState, response.data.response])
             }).catch((err)=>{
-                console.log(err);
+                if(err.response.status === 401){
+                    if(err.response.data.message === "Access Token Expired"){
+                        refresh();
+                    }
+                }
             })
         })
-    },[user.PendingSent])
+    },[user.PendingSent, refresh])
+    
     return ( 
         <>
             {requestsent.map((key, index)=>{     
                 return (
                 <div className="friends-card">
                     <div className="friends-avatar">
-                        <img src={`${localStorage.getItem('localhost')}/user/getavatar/${key._id}`} alt="avatar" />
+                        <div className="friends-avatar-container">
+                            <img src={`${localStorage.getItem('localhost')}/user/getavatar/${key._id}`} alt="avatar" />
+                        </div>
                     </div>
                     <div className="friends-details">
                         <div className="friends-name">

@@ -183,11 +183,15 @@ const Profile = ({refresh, user, logout}) => {
             .then((response)=>{
                 setCurrency(response.data.currency);
             }).catch((err)=>{
-                console.log(err.response);
+                if(err.response.status === 401){
+                    if(err.response.data.message === "Access Token Expired"){
+                        refresh()
+                    }
+                }
             })
         }
         // console.log(user);
-    },[])
+    },[refresh])
     
 
     // Profile Tab
@@ -227,7 +231,11 @@ const Profile = ({refresh, user, logout}) => {
                     },(500))
                 }
             }).catch((err)=>{
-                console.log(err)
+                if(err.response.status === 401){
+                    if(err.response.data.message === "Access Token Expired"){
+                        refresh();
+                    }
+                }
             })
         }).catch((err)=>{
             // open the online error dialog
@@ -340,6 +348,12 @@ const Profile = ({refresh, user, logout}) => {
                     setTimeout(()=>{
                         setProfileChanged(null)
                     },1000)
+                }
+                
+                if(err.response.status === 401){
+                    if(err.response.data.message === "Access Token Expired"){
+                        refresh();
+                    }
                 }
             })
         }
@@ -484,7 +498,7 @@ const Profile = ({refresh, user, logout}) => {
                             <ProfileDetails user={user} logout={logout} changePass={handleOpen} setProfileChanged={setProfileChanged} setAlert={setAlert}/>
                         </TabPanel>
                         <TabPanel value={value} index={1}>
-                            <FriendList user={user} />
+                            <FriendList user={user} refresh={refresh} />
                         </TabPanel>
                     </Box>
                 </div>
@@ -501,6 +515,7 @@ const Profile = ({refresh, user, logout}) => {
                 confirmPass={confirmPass} 
                 handleConfirmPassword={handleConfirmPassword} 
                 changePass={changePass}
+                refresh={refresh}
             />
             <OnlineError open={openAlert} handleClose={handleCloseAlert} />
         </div>

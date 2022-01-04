@@ -17,6 +17,7 @@ import Users from './FrontEnd/Pages/Users';
 //Splash
 import Verified from './FrontEnd/Components/Splash/Verified';
 import OnlineError from './FrontEnd/Components/Dialog/OnlineErrorDialog';
+import Blacklist from './FrontEnd/Pages/Blacklist';
 localStorage.setItem("localhost", 'http://localhost:3003');
 
 
@@ -51,34 +52,37 @@ function App() {
                 Authorization : "Bearer " + localStorage.getItem('refreshToken')
             }
         }).then((response)=>{
-              //Get the data if the user is logged in
-            axios.get(`${localStorage.getItem('localhost')}/user/getuser`,{
-                headers : {
-                    Authorization : "Bearer " + token,
+            if(response.status === 200){
+                //Get the data if the user is logged in
+                axios.get(`${localStorage.getItem('localhost')}/user/getuser`,{
+                    headers : {
+                        Authorization : "Bearer " + token,
+                }
+            }).then((response)=>{
+                    //If the user is not log in
+                    if(response.data.message === "Authentication Failed"){
+                        if(localStorage.getItem('refreshToken')){
+                            refresh();
+                            window.location.reload();
+                        }
+                        setLoggedIn(false);
+        
+                    }else{
+                        countRequest(token)
+                        setUser(response.data.mydata);
+                        setLoggedIn(true);
+                    }
+                }).catch((err)=>{
+                    if(err.response.status === 401){
+                        if(err.response.data.message === "Access Token Expired"){
+                            refresh()
+                        }
+                        setLoggedIn(false);
+                    }
+                })
+            }else{
+                console.log(response)
             }
-            })
-            .then((response)=>{
-                //If the user is not log in
-                if(response.data.message === "Authentication Failed"){
-                    if(localStorage.getItem('refreshToken')){
-                        refresh();
-                        window.location.reload();
-                    }
-                    setLoggedIn(false);
-    
-                }else{
-                    countRequest(token)
-                    setUser(response.data.mydata);
-                    setLoggedIn(true);
-                }
-            }).catch((err)=>{
-                if(err.response.status === 401){
-                    if(err.response.data.message === "Access Token Expired"){
-                        refresh()
-                    }
-                    setLoggedIn(false);
-                }
-            })
         }).catch((err)=>{
             // If there is another User Logged In
             if(err.response.status === 401){
@@ -87,6 +91,8 @@ function App() {
                 }else{
                     handleOpen()
                 }
+            }else{
+                console.log(err.response)
             }
         })
     }
@@ -157,11 +163,12 @@ function App() {
                 <Route exact path="/register" component={Register} />
                 <Route exact path="/dashboard" render={()=> <Dashboard isLoggedIn={isLoggedIn} user={user} logout={logOut} /> } />
                 <Route exact path="/profile" render={()=> <Profile refresh={refresh} isLoggedIn={isLoggedIn} user={user} logout={logOut} /> } />
-                <Route exact path="/friends" render={()=> <Friends user={user} countRequest={requestCount} logout={logOut} />} />
+                <Route exact path="/friends" render={()=> <Friends user={user} refresh={refresh} countRequest={requestCount} logout={logOut} />} />
                 <Route exact path="/verify/:id"  component={Verify} />
                 <Route exact path="/verified/:code"  component={Verified} />
                 <Route exact path="/resetpass/:code" component={ResetPassword}  />
-                <Route exact path="/users/:username" render={()=> <Users user={user} logout={logOut} />} />
+                <Route exact path="/users/:username" render={()=> <Users user={user} logout={logOut} refresh={refresh} />} />
+                <Route exact path="/blacklist" render={()=> <Blacklist user={user} logout={logOut} refresh={refresh} /> }/>
             </Switch>
         </Router>
         <OnlineError open={open} handleClose={handleClose}/>

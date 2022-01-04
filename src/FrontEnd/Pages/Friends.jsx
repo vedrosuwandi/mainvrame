@@ -10,14 +10,13 @@ import Badge from '@mui/material/Badge';
 import PeopleIcon from '@mui/icons-material/People';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import PendingIcon from '@mui/icons-material/Pending';
-import NotInterestedOutlinedIcon from '@mui/icons-material/NotInterestedOutlined';
 
 import FriendRequest from '../Components/Friends/FriendRequest';
 import Navbar from '../Components/Header/Navbar';
 import '../Style/Friends.css';
 import FriendsList from '../Components/Friends/FriendsList';
 import FriendSent from '../Components/Friends/FriendSent';
-import BlackList from '../Components/Friends/BlackList';
+
 
 
 
@@ -56,26 +55,20 @@ function a11yProps(index) {
 
 
 
-const Friends = ({user, countRequest ,logout}) => {
+const Friends = ({user, refresh ,countRequest ,logout}) => {
     const [value, setValue] = useState(0);
     
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
     
-    const [friendListValue, setFriendListValue] = useState(0);
 
-    const handlefriendListChange = (event, newValue) => {
-      setFriendListValue(newValue);
-    };
-
+    
     useEffect(()=>{
         if(Object.keys(user).length === 0){
             return null
         }
     },[user])
-
-
 
 
     if(!user.Contact){
@@ -107,31 +100,15 @@ const Friends = ({user, countRequest ,logout}) => {
                             </Box>
                             
                             <TabPanel value={value} index={0}>
-                                {/* <FriendsList user={user} /> */}
-                                <Box sx={{ width: '100%' }}>
-                                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                                        <Tabs value={friendListValue} onChange={handlefriendListChange} variant="fullWidth" aria-label="full width tabs example">
-                                            <Tab icon={<PeopleIcon />} label="Friend List" {...a11yProps(0)} />
-                                            <Tab icon={<NotInterestedOutlinedIcon />} label="Blacklists" {...a11yProps(1)} />
-                                        </Tabs>
-                                    </Box>
-                                    <TabPanel value={friendListValue} index={0}>
-                                        <div className="friend-container" >
-                                            <FriendsList user={user} />
-                                        </div>
-                                    </TabPanel>
-                                    <TabPanel value={friendListValue} index={1}>
-                                        <BlackList user={user} />
-                                    </TabPanel>
-                                </Box>
+                                <FriendsList user={user} refresh={refresh} />
                             </TabPanel>
 
                             <TabPanel value={value} index={1}>
-                                <FriendRequest user={user} />
+                                <FriendRequest user={user} refresh={refresh} />
                             </TabPanel>
 
                             <TabPanel value={value} index={2}>
-                                <FriendSent user={user} />
+                                <FriendSent user={user} refresh={refresh} />
                             </TabPanel>
                         </Box>
                     </div>

@@ -7,6 +7,7 @@ import SchoolIcon from '@mui/icons-material/School';
 import InfoIcon from '@mui/icons-material/Info';
 import PeopleIcon from '@mui/icons-material/People';
 import PersonIcon from '@mui/icons-material/Person';
+import NotInterestedOutlinedIcon from '@mui/icons-material/NotInterestedOutlined';
 
 import SidebarItem from './SidebarItem';
 
@@ -26,6 +27,7 @@ const SidebarMenu = ({toggleDrawer}) => {
         <Divider />
         <List>
             <SidebarItem icon={<PeopleIcon />} text="Friends" target="/friends" />
+            <SidebarItem icon={<NotInterestedOutlinedIcon />} text="Blacklist" target="/blacklist" />
             <SidebarItem icon={<PersonIcon />} text="Profile" target="/profile" />
             <SidebarItem icon={<InfoIcon />} text="About" target="/dashboard" />
         </List>

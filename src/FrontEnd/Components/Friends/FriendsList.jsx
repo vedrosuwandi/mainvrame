@@ -10,16 +10,19 @@ import Fade from '@mui/material/Fade';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Snackbar from '@mui/material/Snackbar';
+import Pagination from '@mui/material/Pagination';
+import Divider from '@mui/material/Divider';
 
 import ChatIcon from '@mui/icons-material/Chat';
 import DeleteIcon from '@mui/icons-material/Delete';
 import NotInterestedOutlinedIcon from '@mui/icons-material/NotInterestedOutlined';
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
+import SortIcon from '@mui/icons-material/Sort';
 
 import ActionDialog from "../Dialog/ActionDialog";
 
 
-const FriendsList = ({user}) => {
+const FriendsList = ({user , refresh}) => {
     const [showfriends, setShowFriends] = useState([]);
     const [details , setDetails] = useState([]);
 
@@ -62,8 +65,17 @@ const FriendsList = ({user}) => {
         }
     
         setOpenSnackbar(false);
-      };
+    };
     
+    /*Sort Menu*/
+    const [anchorElSort, setAnchorElSort] = useState(null);
+    const openSortMenu = Boolean(anchorElSort);
+    const handleOpenSortMenu = (event) => {
+      setAnchorElSort(event.currentTarget);
+    };
+    const handleCloseSortMenu = () => {
+      setAnchorElSort(null);
+    };
     
     /*Mobile Action Menu*/
     const MenuDetail = ({id, name}) =>{
@@ -78,6 +90,7 @@ const FriendsList = ({user}) => {
             event.stopPropagation();
             setAnchorEl(null);
         };
+
 
         return(
             <>
@@ -110,8 +123,8 @@ const FriendsList = ({user}) => {
 
     /* Blacklist Friend */
     const blacklist = async (id) =>{
-        await axios.post(`${localStorage.getItem('localhost')}/user/blacklist/${id}`, {
-            id : id
+        await axios.post(`${localStorage.getItem('localhost')}/user/blacklist`, {
+            ID : id
         }, {
             headers : {
                 Authorization : "Bearer " + Cookies.get('token')
@@ -120,12 +133,16 @@ const FriendsList = ({user}) => {
             setStatus(true);
             setOpenSnackbar(true);
             setMessage(response.data.message);
+            setTimeout(()=>{
+                window.location.reload();
+            }, 1000);
         }).catch((err)=>{
-            console.log(err.message);
+            if(err.response.status === 401){
+                if(err.response.data.message === "Access Token Expired"){
+                    refresh();
+                }
+            }
         })
-        setTimeout(()=>{
-            window.location.reload();
-        }, 1000);
     }
     
     const deletefriend = ()=>{
@@ -144,7 +161,11 @@ const FriendsList = ({user}) => {
                 window.location.reload()
             },1000)
         }).catch((err)=>{
-            console.log(err.message)
+            if(err.response.status === 401){
+                if(err.response.data.message === "Access Token Expired"){
+                    refresh();
+                }
+            }
         })
     }
 
@@ -164,6 +185,38 @@ const FriendsList = ({user}) => {
     }
       
 
+    const sortFriendAsc = (key) =>{
+        return (a, b) =>{
+            if(a[key] > b[key]){
+                return 1
+            }else if(a[key] < b[key]){
+                return -1
+            }
+        }
+    }
+
+    const sortFriendDesc = (key) =>{
+        return (a, b) =>{
+            if(a[key] > b[key]){
+                return -1
+            }else if(a[key] < b[key]){
+                return 1
+            }
+        }
+    }
+
+    /*Paginate*/
+    // How many Items in one page
+    const ItemLimit = 6;
+    //Current Page
+    const [page, setPage] = useState(1);
+    // Set the Maximum Number of Page 
+
+    const changePage = (event, value)=>{
+      setPage(value);
+    }
+
+
     useEffect(()=>{
         user.Friends.forEach((key, index)=>{
             if(!key.Blacklist){
@@ -171,7 +224,11 @@ const FriendsList = ({user}) => {
                 .then((response)=>{
                     setShowFriends(prevState => [ ...prevState , response.data.response])
                 }).catch((err)=>{
-                    console.log(err)
+                    if(err.response.status === 401){
+                        if(err.response.data.message === "Access Token Expired"){
+                            refresh();
+                        }
+                    }
                 })
             }
         })
@@ -179,8 +236,9 @@ const FriendsList = ({user}) => {
     },[user])
     
 
+
     useEffect(()=>{
-        axios.get(`${localStorage.getItem('localhost')}/user/countblacklist`,{
+        axios.get(`${localStorage.getItem('localhost')}/user/countblacklistfriend`,{
             headers :{
                 Authorization : "Bearer " + Cookies.get('token')
             }
@@ -189,13 +247,30 @@ const FriendsList = ({user}) => {
                 checkOnline()
             }
         }).catch((err)=>{
-            console.log(err);
+            if(err.response.status === 401){
+                if(err.response.data.message === "Access Token Expired"){
+                    refresh();
+                }
+            }
         })
          // eslint-disable-next-line
     }, [showfriends])
 
+
     return ( 
         <>
+            <div className="FriendListMenu" style={{display: "flex" , justifyContent:"flex-end"}}>
+                <IconButton
+                size="small"
+                edge="start"
+                color="primary"
+                title="Sort FriendList"
+                aria-expanded={openSortMenu ? 'true' : undefined}
+                onClick={handleOpenSortMenu}
+                >
+                    <SortIcon style={{ transform: "rotate(180deg)" }}/>
+                </IconButton>
+            </div>
             {
                 status === null ?
                 <> </>
@@ -207,92 +282,125 @@ const FriendsList = ({user}) => {
                 :
                 <Alert severity="success">{`${message}`}</Alert>
             }
-
-                {details.map((key, index)=>{
-                    return(
-                        <div className="friends-card" key={index} onClick={()=>{window.location.href=`users/${key.Username}`}} >
-                            <div className="friends-avatar">
-                                <div className="friends-avatar-container" style={{ borderColor :  key.Online === "hidden" ? "grey" : key.Online ? "green" : "red" }}>
-                                    <img src={`${localStorage.getItem('localhost')}/user/getavatar/${key._id}`} alt="avatar" />
-                                </div>
-                            </div>
-                            <div className="friends-name">
-                                {key.Name}
-                            </div>
-                            <div className="friends-action">
-                                <Stack spacing={1} direction="row">
-                                    <div className="friends-chat">
-                                        <IconButton
-                                            size="medium"
-                                            edge="start"
-                                            color="primary"
-                                            aria-label="open drawer"
-                                            sx={{
-                                                mr:{
-                                                    sm : '20px',
-                                                    xs : '0px'
-                                                },
-                                                
-                                            }}
-                                            title="Chat"
-                                            onClick={(event)=>{
-                                                event.stopPropagation();
-                                            }}
-                                        >
-                                            
-                                            <ChatIcon id="action-icon-chat" />
-                                        </IconButton>
-                                    </div>
-                                    <div className="friends-blacklist">
-                                        <IconButton
-                                            size="medium"
-                                            edge="start"
-                                            color="inherit"
-                                            aria-label="open drawer"
-                                            sx={{
-                                                mr:{
-                                                    sm : '20px',
-                                                    xs : '0px'
-                                                },
-                                            }}
-                                            title="Blacklist"
-                                            onClick={(event) => { 
-                                                event.stopPropagation();
-                                                handleOpenBlacklist(key._id , key.Name)
-                                            }}
-                                        >
-                                            <NotInterestedOutlinedIcon id="action-icon-blacklist" style={{color:"red"}} />
-                                        </IconButton>
-                                    </div>
-                                    <div className="friends-delete">
-                                        <IconButton
-                                            size="medium"
-                                            edge="start"
-                                            color="inherit"
-                                            aria-label="open drawer"
-                                            sx={{
-                                                mr:{
-                                                    sm : '20px',
-                                                    xs : '10px'
-                                                },
-                                            }}
-                                            title="Remove Friend"
-                                            onClick={(event) =>{
-                                                event.stopPropagation();
-                                                handleOpenRemove(key._id , key.Name)
-                                            }}
-                                        >
-                                            <DeleteIcon id="action-icon-delete" style={{color:"red"}} />
-                                        </IconButton>
-                                    </div>
-                                </Stack>
-                            </div>
-                            <div className="friends-action-mobile">
-                                <MenuDetail id={key._id} name={key.Name}/>
+    
+            {details.map((key, index)=>{
+                return(
+                    <div className="friends-card" key={index} onClick={()=>{window.location.href=`users/${key.Username}`}} >
+                        <div className="friends-avatar">
+                            <div className="friends-avatar-container" style={{ borderColor :  key.Online === "hidden" ? "grey" : key.Online ? "green" : "red" }}>
+                                <img src={`${localStorage.getItem('localhost')}/user/getavatar/${key._id}`} alt="avatar" />
                             </div>
                         </div>
-                    )
-                })}
+                        <div className="friends-name">
+                            {key.Name}
+                        </div>
+                        <div className="friends-action">
+                            <Stack spacing={1} direction="row">
+                                <div className="friends-chat">
+                                    <IconButton
+                                        size="medium"
+                                        edge="start"
+                                        color="primary"
+                                        aria-label="open drawer"
+                                        sx={{
+                                            mr:{
+                                                sm : '20px',
+                                                xs : '0px'
+                                            },
+                                            
+                                        }}
+                                        title="Chat"
+                                        onClick={(event)=>{
+                                            event.stopPropagation();
+                                        }}
+                                    >
+                                        
+                                        <ChatIcon id="action-icon-chat" />
+                                    </IconButton>
+                                </div>
+                                <div className="friends-blacklist">
+                                    <IconButton
+                                        size="medium"
+                                        edge="start"
+                                        color="inherit"
+                                        aria-label="open drawer"
+                                        sx={{
+                                            mr:{
+                                                sm : '20px',
+                                                xs : '0px'
+                                            },
+                                        }}
+                                        title="Blacklist"
+                                        onClick={(event) => { 
+                                            event.stopPropagation();
+                                            handleOpenBlacklist(key._id , key.Name)
+                                        }}
+                                    >
+                                        <NotInterestedOutlinedIcon id="action-icon-blacklist" style={{color:"red"}} />
+                                    </IconButton>
+                                </div>
+                                <div className="friends-delete">
+                                    <IconButton
+                                        size="medium"
+                                        edge="start"
+                                        color="inherit"
+                                        aria-label="open drawer"
+                                        sx={{
+                                            mr:{
+                                                sm : '20px',
+                                                xs : '10px'
+                                            },
+                                        }}
+                                        title="Remove Friend"
+                                        onClick={(event) =>{
+                                            event.stopPropagation();
+                                            handleOpenRemove(key._id , key.Name)
+                                        }}
+                                    >
+                                        <DeleteIcon id="action-icon-delete" style={{color:"red"}} />
+                                    </IconButton>
+                                </div>
+                            </Stack>
+                        </div>
+                        <div className="friends-action-mobile">
+                            <MenuDetail id={key._id} name={key.Name}/>
+                        </div>
+                    </div>
+                )
+            })}
+            <div className="friendlist-paginate" style={{bottom : "0" , position:"absolute", width:"95%"}}>
+                <Divider />
+                <div className="friendlist-paginate-wrapper" style={{display : "flex" , justifyContent:"center"}}>
+                    <Pagination 
+                        variant="outlined" 
+                        page={page}
+                        // Ceil - to round the number into the high nearest integer
+                        count={Math.ceil(details.length / ItemLimit)}
+                        onChange={changePage}
+                        defaultPage={1}
+                        size='medium'
+                    />
+                </div>
+            </div>
+            {/* Menu For Sorting FriendList */}
+            <Menu
+                id="basic-menu"
+                anchorEl={anchorElSort}
+                open={openSortMenu}
+                onClose={handleCloseSortMenu}
+                MenuListProps={{
+                'aria-labelledby': 'basic-button',
+                }}
+            >
+                <MenuItem onClick={()=>{
+                    details.sort(sortFriendAsc("Name"))
+                    handleCloseSortMenu()
+                }}>A - Z Ascending</MenuItem>
+                <MenuItem onClick={()=>{
+                    details.sort(sortFriendDesc("Name"))
+                    handleCloseSortMenu()
+                }}>Z - A Descending</MenuItem>
+            </Menu>
             {/* Dialog for Blacklist */}
             <ActionDialog open={openBlacklistDialog} handleClose={handleCloseBlacklist} message={`Do you want to Blacklist ${name}`} action={()=>blacklist(ID)} />
             {/* Dialog for Remove */}

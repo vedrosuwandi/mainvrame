@@ -18,7 +18,7 @@ import ChangeEmailVerification from '../Dialog/ChangeEmailVerification';
 
 
 
-const ProfileDetails = ({ user, logout, changePass, setProfileChanged, setAlert}) => {
+const ProfileDetails = ({ user, logout, changePass, setProfileChanged, setAlert, refresh}) => {
 
      /* Change Username */
      const [isUsernameEdit , setIsUsernameEdit] = useState(false);
@@ -57,7 +57,11 @@ const ProfileDetails = ({ user, logout, changePass, setProfileChanged, setAlert}
                 replacetoken(response.data.newRefresh , response.data.newAccess)
             }
         }).catch((err)=>{
-            console.log(err)
+            if(err.response.status === 401){
+                if(err.response.data.message === "Access Token Expired"){
+                    refresh();
+                }
+            }
         })
      }
 
@@ -111,7 +115,11 @@ const ProfileDetails = ({ user, logout, changePass, setProfileChanged, setAlert}
                 }, (1000));
             }
         }).catch((err)=>{
-
+            if(err.response.status === 401){
+                if(err.response.data.message === "Access Token Expired"){
+                    refresh();
+                }
+            }
         })
      }
 
@@ -169,6 +177,12 @@ const ProfileDetails = ({ user, logout, changePass, setProfileChanged, setAlert}
                     setTimeout(()=>{
                         setProfileChanged(null)
                     },1000)
+                }
+            }).catch((err)=>{
+                if(err.response.status === 401){
+                    if(err.response.data.message === "Access Token Expired"){
+                        refresh();
+                    }
                 }
             })
         }

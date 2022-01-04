@@ -12,34 +12,22 @@ import MenuItem from '@mui/material/MenuItem';
 import Snackbar from '@mui/material/Snackbar';
 
 
-import DeleteIcon from '@mui/icons-material/Delete';
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 import ActionDialog from "../Dialog/ActionDialog";
 
-const BlackList = ({user}) => {
 
-    const [showfriends, setShowFriends] = useState([]);
+const BlackList = ({user, refresh}) => {
+
+    const [showblacklist, setShowBlacklist] = useState([]);
     const [frienddetails , setFriendDetails] = useState([]);
-
-    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     
     const [name , setName] =useState(null);
     const [ID , setID] = useState(null);
 
     const [status, setStatus] = useState(null);
     const [message , setMessage] = useState(null);
-
-    const handleClose = () => {
-        setOpenDeleteDialog(false);
-    };
-    
-    const handleOpenRemove = (id, name)=>{
-        setOpenDeleteDialog(true);
-        setName(name);
-        setID(id);
-    }
 
     const [openBlacklistDialog , setOpenBlacklistDialog] = useState(false);
 
@@ -63,46 +51,11 @@ const BlackList = ({user}) => {
     };
     
  
-    /* Delete Friend Function */
-    const deletefriend = ()=>{
-        axios.post(`${localStorage.getItem('localhost')}/user/removefriend/${ID}`, {
-            id : ID
-        }, {
-            headers : {
-                Authorization : 'Bearer ' + Cookies.get('token')
-            }
-        }).then((response)=>{
-            setStatus(true)
-            setMessage(response.data.message)
-            handleClose();
-            setTimeout(()=>{
-                window.location.reload()
-            },1000)
-        }).catch((err)=>{
-            console.log(err.message)
-        })
-    }
-
-
-    /*Check User is online or not and append it on friendDetails array */
-    const checkOnline = async () =>{  
-        const request =  showfriends.forEach((key, index)=>{
-          axios.get(`${localStorage.getItem('localhost')}/online/checkstatus/${key.Username}`)
-          .then((response)=>{
-            // console.log(response.data)
-            // console.log(index)
-            setFriendDetails(prevState => [...prevState , {...key , ...response.data}])
-          }).catch((err)=>{
-              console.log(err)
-          })
-        })
-        return await request
-    }
-      
+  
     /* Cancel Blacklist Function */
     const reverseBlacklist = async (id) =>{
-        await axios.post(`${localStorage.getItem('localhost')}/user/reverseblacklist/${id}`, {
-            id : id
+        await axios.post(`${localStorage.getItem('localhost')}/user/reverseblacklist`, {
+            ID : id
         }, {
             headers : {
                 Authorization : "Bearer " + Cookies.get('token')
@@ -111,15 +64,37 @@ const BlackList = ({user}) => {
             setStatus(false);
             setOpenSnackbar(true);
             setMessage(response.data.message);
+            setTimeout(()=>{
+                window.location.reload();
+            }, 1000);
         }).catch((err)=>{
-            console.log(err)
+            if(err.response.status === 401){
+                if(err.response.data.message === "Access Token Expired"){
+                    refresh();
+                }
+            }
         })
-
-        setTimeout(()=>{
-            window.location.reload();
-        }, 1000);
     }
-    
+
+      /*Check User is online or not and append it on friendDetails array */
+    const checkOnline = async () =>{  
+        const request =  showblacklist.forEach((key, index)=>{
+          axios.get(`${localStorage.getItem('localhost')}/online/checkstatus/${key.Username}`)
+          .then((response)=>{
+            // console.log(response.data)
+            // console.log(index)
+            setFriendDetails(prevState => [...prevState , {...key , ...response.data}])
+          }).catch((err)=>{
+            if(err.response.status === 401){
+                if(err.response.data.message === "Access Token Expired"){
+                    refresh();
+                }
+            }
+          })
+        })
+        return await request
+    }
+      
     /*Mobile Action Menu*/
     const MenuDetail = ({id, name}) =>{
         const [anchorEl, setAnchorEl] = useState(null);
@@ -157,22 +132,24 @@ const BlackList = ({user}) => {
                     TransitionComponent={Fade}
                 >
                     <MenuItem onClick={(event)=> { event.stopPropagation(); handleOpenBlacklist(id, name)}}>Cancel Blacklist</MenuItem>
-                    <MenuItem onClick={(event) =>{ event.stopPropagation(); handleOpenRemove(id , name)}}>Remove</MenuItem>
                 </Menu>
             </>
         )
     }
 
     useEffect(()=>{
-        user.Friends.forEach((key, index)=>{
-            if(key.Blacklist){
-                axios.get(`${localStorage.getItem('localhost')}/user/getfriend/${key._id}`)
-                .then((response)=>{
-                    setShowFriends(prevState => [ ...prevState , response.data.response])
-                }).catch((err)=>{
-                    console.log(err)
-                })
-            }
+        user.Blacklist.forEach((key, index)=>{
+            axios.get(`${localStorage.getItem('localhost')}/user/getfriend/${key._id}`)
+            .then((response)=>{
+                setShowBlacklist(prevState => [ ...prevState , response.data.response])
+            }).catch((err)=>{
+                if(err.response.status === 401){               
+                    if(err.response.data.message === "Access Token Expired"){
+                        refresh()
+                    }
+                }
+            })
+        
         })
      // eslint-disable-next-line
     },[user])
@@ -184,14 +161,18 @@ const BlackList = ({user}) => {
                 Authorization : "Bearer " + Cookies.get('token')
             }
         }).then((response)=>{
-            if(showfriends.length === response.data.count){
+            if(showblacklist.length === response.data.count){
                 checkOnline()
             }
         }).catch((err)=>{
-            console.log(err);
+            if(err.response.status === 401){               
+                if(err.response.data.message === "Access Token Expired"){
+                    refresh()
+                }
+            }
         })
          // eslint-disable-next-line
-    }, [showfriends])
+    }, [showblacklist, refresh])
 
 
     return ( 
@@ -222,50 +203,29 @@ const BlackList = ({user}) => {
                         </div>
                         <div className="friends-action">
                             <Stack spacing={1} direction="row">
-                            <div className="friends-reverse">
-                                <IconButton
-                                    size="medium"
-                                    edge="start"
-                                    color="success"
-                                    aria-label="open drawer"
-                                    sx={{
-                                        mr:{
-                                            sm : '20px',
-                                            xs : '10px'
-                                        },
+                                <div className="friends-reverse">
+                                    <IconButton
+                                        size="medium"
+                                        edge="start"
+                                        color="success"
+                                        aria-label="open drawer"
+                                        sx={{
+                                            mr:{
+                                                sm : '20px',
+                                                xs : '10px'
+                                            },
+                                            
+                                        }}
+                                        onClick={(event)=> {
+                                            event.stopPropagation()
+                                            handleOpenBlacklist(key._id , key.Name)
+                                        }}
+                                        title="Cancel Blacklist"
+                                    >
                                         
-                                    }}
-                                    onClick={(event)=> {
-                                        event.stopPropagation()
-                                        handleOpenBlacklist(key._id , key.Name)
-                                    }}
-                                    title="Cancel Blacklist"
-                                >
-                                    
-                                    <CheckCircleOutlineIcon id="action-icon-reverse" />
-                                </IconButton>
-                            </div>
-                            <div className="friends-delete">
-                                <IconButton
-                                    size="medium"
-                                    edge="start"
-                                    color="inherit"
-                                    aria-label="open drawer"
-                                    sx={{
-                                        mr:{
-                                            sm : '20px',
-                                            xs : '10px'
-                                        },
-                                    }}
-                                    title="Remove Friend"
-                                    onClick={(event) => {
-                                        event.stopPropagation()
-                                        handleOpenRemove(key._id , key.Name)
-                                    }}
-                                >
-                                    <DeleteIcon id="action-icon-delete" style={{color:"red"}} />
-                                </IconButton>
-                            </div>
+                                        <CheckCircleOutlineIcon id="action-icon-reverse" />
+                                    </IconButton>
+                                </div>
                             </Stack>
                         </div>
                         <div className="friends-action-mobile">
@@ -277,8 +237,7 @@ const BlackList = ({user}) => {
 
             {/* Open Blacklist Dialog */}
             <ActionDialog open={openBlacklistDialog} handleClose={handleCloseBlacklist} message={`Do you want to Cancel Blacklist on ${name} ?`} action={()=>{reverseBlacklist(ID)}}/>
-            {/* Open Remove Dialog */}
-            <ActionDialog open={openDeleteDialog} handleClose={handleClose} message={`Are you sure want to remove ${name} from your friendlist?`} action={deletefriend} />
+           
         </>
      );
 }
