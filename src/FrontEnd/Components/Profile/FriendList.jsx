@@ -12,7 +12,6 @@ import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import Pagination from '@mui/material/Pagination';
-import Divider from '@mui/material/Divider';
 
 import SearchIcon from '@mui/icons-material/Search';
 import SortIcon from '@mui/icons-material/Sort';
@@ -65,8 +64,8 @@ const Search = styled('div')(({ theme }) => ({
   }));
 
 
-
 const FriendList = ({user, refresh}) => {
+
 
 
   /*Mobile Menu*/
@@ -165,11 +164,11 @@ const FriendList = ({user, refresh}) => {
       // Append the data from id inside user.Friends to friendDetails as array of objects
       await user.Friends.forEach((key, i)=>{
         if(!key.Blacklist){
-          axios.get(`${localStorage.getItem('localhost')}/user/getfriend/${key._id}`)
+          axios.get(`${localStorage.getItem('url')}/user/getfriend/${key._id}`)
           .then((response)=>{
               setFriendDetails(prevState => [...prevState , response.data.response])
           }).catch((err)=>{
-              console.log(err)
+              console.log(err.response)
           })
         }
       })
@@ -178,7 +177,7 @@ const FriendList = ({user, refresh}) => {
 
     const checkOnline = async () =>{  
       const request =  friendDetails.forEach((key, index)=>{
-        axios.get(`${localStorage.getItem('localhost')}/online/checkstatus/${key.Username}`)
+        axios.get(`${localStorage.getItem('url')}/online/checkstatus/${key.Username}`)
         .then((response)=>{
           // console.log(response.data)
           // console.log(index)
@@ -202,6 +201,8 @@ const FriendList = ({user, refresh}) => {
       setPage(value);
     }
 
+    
+
     /*UseEffect */
     useEffect( () => {
       getfriendlist()
@@ -209,7 +210,7 @@ const FriendList = ({user, refresh}) => {
     },[user.Friends])
     
     useEffect(()=>{
-      axios.get(`${localStorage.getItem('localhost')}/user/countblacklistfriend`,{
+      axios.get(`${localStorage.getItem('url')}/user/countblacklistfriend`,{
         headers :{
             Authorization : "Bearer " + Cookies.get('token')
         }
@@ -229,7 +230,15 @@ const FriendList = ({user, refresh}) => {
       // eslint-disable-next-line
     },[friendDetails])
   
- 
+      // Visible Paginate
+    const VisiblePaginate = ()=>{
+      if (details.length > ItemLimit){
+          return true
+      }else{
+          return false
+      }
+    }
+
 
     return ( 
       <div className="friendlist-container"> 
@@ -247,6 +256,27 @@ const FriendList = ({user, refresh}) => {
                                 />
                             </Search>
                         <Box sx={{ flexGrow: 1 }} />
+                        <IconButton
+                            size="medium"
+                            edge="start"
+                            color="primary"
+                            aria-label="open drawer"
+                            sx={{
+                                mr:{
+                                    sm : '20px',
+                                    xs : '0px'
+                                },
+                                
+                            }}
+                            title="Chat"
+                            onClick={(event)=>{
+                                event.stopPropagation();
+                                // setCurrentChat(key);
+                                window.location.href = '/friends/chat';
+                            }}
+                        >   
+                          <ChatIcon id="action-icon-chat" fontSize="small" style={{color:"white" }} />
+                        </IconButton>
                         <IconButton
                           size="small"
                           edge="start"
@@ -293,7 +323,7 @@ const FriendList = ({user, refresh}) => {
                                     :
                                     "red"
                                     }}>
-                                    <img src={`${localStorage.getItem('localhost')}/user/getavatar/${key._id}`} alt="avatar" />
+                                    <img src={`${localStorage.getItem('url')}/user/getavatar/${key._id}`} alt="avatar" />
                                 </div>
                             </div>
                             <div className="friendlist-name">
@@ -323,9 +353,10 @@ const FriendList = ({user, refresh}) => {
                         handleCloseSortMenu()
                     }}>Z - A Descending</MenuItem>
                 </Menu>
-              <Divider />
-              <div className="friendlist-paginate">
+
+              <div className="friendlist-paginate" style={{display : VisiblePaginate() ? 'flex' : 'none'}}>
                 <Pagination 
+                 
                   variant="outlined" 
                   page={page}
                   // Ceil - to round the number into the high nearest integer
@@ -333,6 +364,8 @@ const FriendList = ({user, refresh}) => {
                   onChange={changePage}
                   defaultPage={1}
                   size='medium'
+                  showFirstButton
+                  showLastButton
                 />
               </div>
         </div>

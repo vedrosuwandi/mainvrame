@@ -10,14 +10,8 @@ const Verified = () => {
     const [verified, setverified] = useState();
 
     useEffect(()=>{
-        axios.post(`http://localhost:3003/verify/${code}`)
+        axios.post(`${localStorage.getItem('url')}/verify/${code}`)
         .then((response)=>{
-
-            if(response.data.message === "Code Expired"){
-                // alert("Link Expired, Please Generate the new one");
-                setverified(false);
-                return
-            }
             setverified(true);
             setTimeout(()=>{
                 window.location.href = "/"    
@@ -25,7 +19,15 @@ const Verified = () => {
             // alert("Account Verified");
             // window.location.href="/";
         }).catch((err)=>{
-
+            if(err.response.status === 401){
+                if(err.response.data.message === "Code Expired"){
+                    // alert("Link Expired, Please Generate the new one");
+                    setverified(false);
+                    return
+                }
+            }else{
+                console.log(err.response)
+            }
         })
     // eslint-disable-next-line
     },[])

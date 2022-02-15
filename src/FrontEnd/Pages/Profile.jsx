@@ -107,7 +107,7 @@ const Profile = ({refresh, user, logout}) => {
 
     // Open and Close Function of the Dialog
     const handleOpen = () =>{
-        axios.get(`${localStorage.getItem("localhost")}/online/checktoken` , {
+        axios.get(`${localStorage.getItem("url")}/online/checktoken` , {
             headers :{
                 Authorization : 'Bearer ' + localStorage.getItem('refreshToken')
             }
@@ -117,6 +117,8 @@ const Profile = ({refresh, user, logout}) => {
             // open the online error dialog
             if(err.response.status === 401){
                 handleOpenAlert();
+            }else{
+                console.log(err.response);
             }
         })
     }
@@ -136,7 +138,7 @@ const Profile = ({refresh, user, logout}) => {
             setChangedStat("Please enter old password")
             setIsChanged(false)
         }else{
-            await axios.post(`${localStorage.getItem("localhost")}/user/changepass` , {
+            await axios.post(`${localStorage.getItem("url")}/user/changepass` , {
                 OldPassword : oldPassword,
                 Password : password
                 
@@ -145,22 +147,27 @@ const Profile = ({refresh, user, logout}) => {
                     Authorization : "Bearer " + Cookies.get('token')
                 },
             }).then((response)=>{
-               if(!response.data.changed){
+                
+                setChangedStat("Password Changed");
+                setIsChanged(true);
+
+                //Reset Textfields
+                setOldPassword("");
+                setPassword("");
+                setConfirmPass("");
+
+                setTimeout(()=>{
+                    setIsChanged(null);
+                    handleClose()
+                },1000)
+            
+            }).catch((err)=>{
+                if(err.response.status === 401){
                     setChangedStat("Old Password Incorrect");
                     setIsChanged(false);
-               }else{
-                    setChangedStat("Password Changed");
-                    setIsChanged(true);
-                    setOldPassword("");
-                    setPassword("");
-                    setConfirmPass("");
-                    setTimeout(()=>{
-                        setIsChanged(null);
-                        handleClose()
-                    },1000)
-               }
-            }).catch((err)=>{
-                console.log(err);
+                }else{
+                    console.log(err.response);
+                }
             })
         }
     }
@@ -175,7 +182,7 @@ const Profile = ({refresh, user, logout}) => {
             window.location.href="/"
         }else{
             // get user currency
-            axios.get(`${localStorage.getItem('localhost')}/user/getcurrency`, {
+            axios.get(`${localStorage.getItem('url')}/user/getcurrency`, {
                 headers : {
                     Authorization : "Bearer " + Cookies.get('token')
                 }
@@ -187,6 +194,8 @@ const Profile = ({refresh, user, logout}) => {
                     if(err.response.data.message === "Access Token Expired"){
                         refresh()
                     }
+                }else{
+                    console.log(err.response);
                 }
             })
         }
@@ -207,74 +216,86 @@ const Profile = ({refresh, user, logout}) => {
 
     //Upload Avatar Image 
     const uploadImage = (file)=>{
-        axios.get(`${localStorage.getItem("localhost")}/online/checktoken` , {
+        axios.get(`${localStorage.getItem("url")}/online/checktoken` , {
             headers :{
                 Authorization : 'Bearer ' + localStorage.getItem('refreshToken')
             }
         }).then((response)=>{
-            axios.post(`${localStorage.getItem("localhost")}/user/uploadavatar/${user._id}`, file ,{
+            axios.post(`${localStorage.getItem("url")}/user/uploadavatar/${user._id}`, file ,{
                 headers : {
                     'Content-Type': 'multipart/form-data',
                     Authorization : 'Bearer ' + Cookies.get('token')
                 }
             }).then((response)=>{
                 setAlert(response.data.message);
-                if(response.data.message === "Max size is 1MB" || response.data.message === "Select a File" || response.data.message === "Only .png, .jpg and .jpeg format allowed!"){
-                    setProfileChanged(false);
-                    setTimeout(()=>{
-                        setProfileChanged(null);
-                     },(1000))
-                }else{
-                    setProfileChanged(true);
-                    setTimeout(()=>{
-                        window.location.reload()
-                    },(500))
-                }
+                setProfileChanged(true);
+                setTimeout(()=>{
+                    window.location.reload()
+                },(500))
+                
             }).catch((err)=>{
                 if(err.response.status === 401){
                     if(err.response.data.message === "Access Token Expired"){
                         refresh();
                     }
+                }else if(err.response.status === 404 || err.response.status === 413 || err.response.status === 500){
+                    setAlert(err.response.data.message);
+                    setProfileChanged(false);
+                    setTimeout(()=>{
+                        setProfileChanged(null);
+                     },(1000))
+                }else{
+                    console.log(err.response);
                 }
             })
         }).catch((err)=>{
             // open the online error dialog
             if(err.response.status === 401){
                 handleOpenAlert();
+            }else{
+                console.log(err.response);
             }
         })
     }
    
     const uploadBanner = (file)=>{
-        axios.get(`${localStorage.getItem('localhost')}/online/checktoken` , {
+        axios.get(`${localStorage.getItem('url')}/online/checktoken` , {
             headers : {
                 Authorization : 'Bearer ' + localStorage.getItem('refreshToken')
             }
         }).then((response)=>{
-            axios.post(`${localStorage.getItem("localhost")}/user/uploadbanner/${user._id}`, file, {
+            axios.post(`${localStorage.getItem("url")}/user/uploadbanner/${user._id}`, file, {
                 headers : {
                     'Content-Type': 'multipart/form-data',
                     Authorization : "Bearer " + Cookies.get('token')
                 }
             }).then((response)=>{
                 setAlert(response.data.message);
-                if(response.data.message === "Max size is 1MB" || response.data.message === "Select a File" || response.data.message === "Only .png, .jpg and .jpeg format allowed!"){
+                setProfileChanged(true);
+                setTimeout(()=>{
+                    window.location.reload()
+                },(500))
+            
+            }).catch((err)=>{
+                if(err.response.status === 401){
+                    if(err.response.data.message === "Access Token Expired"){
+                        refresh();
+                    }
+                }else if(err.response.status === 404 || err.response.status === 413 || err.response.status === 500){
+                    setAlert(err.response.data.message);
                     setProfileChanged(false);
                     setTimeout(()=>{
-                       setProfileChanged(null);
-                    },(1000))
+                        setProfileChanged(null);
+                     },(1000))
                 }else{
-                    setProfileChanged(true);
-                    setTimeout(()=>{
-                        window.location.reload()
-                    },(500))
+                    console.log(err.response);
                 }
-            }).catch((err)=>{
-                console.log(err)
             })
         }).catch((err)=>{
             if(err.response.status === 401){
                 handleOpenAlert();
+            }else{
+                console.log(err.response);
             }
         })
     }
@@ -328,7 +349,7 @@ const Profile = ({refresh, user, logout}) => {
                 setProfileChanged(null);
             }, 1000)
         }else{
-            axios.post(`${localStorage.getItem('localhost')}/user/changename` , {
+            axios.post(`${localStorage.getItem('url')}/user/changename` , {
                 Name : ChangeName
             },{
                 headers : {
@@ -342,23 +363,25 @@ const Profile = ({refresh, user, logout}) => {
                 },1000)
 
             }).catch((err)=>{
-                if(err.response.status === 400){
+                if(err.response.status === 422){
                     setProfileChanged(false);
                     setAlert(err.response.data.message);
                     setTimeout(()=>{
                         setProfileChanged(null)
                     },1000)
-                }
-                
-                if(err.response.status === 401){
+                }else if(err.response.status === 401){
                     if(err.response.data.message === "Access Token Expired"){
                         refresh();
                     }
+                }else{
+                    console.log(err.response);
                 }
             })
         }
     }
    
+  
+
     // To prevent Error when retrieving Nested Document
     if(!user.Contact){
         return null;
@@ -368,8 +391,8 @@ const Profile = ({refresh, user, logout}) => {
 
     return (
         <div className="profile-container">
-            <div className="profile-wrapper">
-                <div className="profile-header">
+            <div className="profile-wrapper" >
+                <div className="profile-header" style={{position : 'sticky', zIndex : '5', width : '100%', top:'0'}}>
                     <div className="profile-proflechanged-alert" style={{position : "absolute", width:"100%", zIndex:"5"}}>
                         { 
                         profileChanged === null ? 
@@ -407,7 +430,7 @@ const Profile = ({refresh, user, logout}) => {
                                         <div className="avatar-upload">
                                             <EditIcon fontSize="large" />
                                         </div>
-                                        <img for="avatar-upload" src={`http://localhost:3003/user/getavatar/${user._id}`} alt="avatar" />
+                                        <img for="avatar-upload" src={user.Avatar?.GoogleAvatar ? user.Avatar.GoogleAvatar : `http://localhost:3003/user/getavatar/${user._id}`} alt="avatar" />
                                     </div>
                                     <input id="avatar-upload" name="file" type="file" onChange={fileChange}/> 
                                 </label>

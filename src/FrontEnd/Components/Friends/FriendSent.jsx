@@ -7,7 +7,7 @@ const FriendSent = ({user, refresh}) => {
 
     useEffect(()=>{
         user.PendingSent.forEach((key, index)=>{
-            axios.get(`${localStorage.getItem('localhost')}/user/getfriend/${key._id}`)
+            axios.get(`${localStorage.getItem('url')}/user/getfriend/${key._id}`)
             .then((response)=>{
                 setRequestSent(prevState =>[...prevState, response.data.response])
             }).catch((err)=>{
@@ -15,6 +15,8 @@ const FriendSent = ({user, refresh}) => {
                     if(err.response.data.message === "Access Token Expired"){
                         refresh();
                     }
+                }else{
+                    console.log(err.response);
                 }
             })
         })
@@ -27,7 +29,7 @@ const FriendSent = ({user, refresh}) => {
                 <div className="friends-card">
                     <div className="friends-avatar">
                         <div className="friends-avatar-container">
-                            <img src={`${localStorage.getItem('localhost')}/user/getavatar/${key._id}`} alt="avatar" />
+                            <img src={`${localStorage.getItem('url')}/user/getavatar/${key._id}`} alt="avatar" />
                         </div>
                     </div>
                     <div className="friends-details">

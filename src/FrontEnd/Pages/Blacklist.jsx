@@ -58,7 +58,7 @@ const Blacklist = ({user, logout, refresh}) => {
     }    
     return (
         <div className='blacklist-container'>
-            <div className="blacklist-nav">
+            <div className="blacklist-nav" style={{position : 'sticky', zIndex : '5', width : '100%', top:'0'}}>
                 <Navbar user={user} logout={logout} showSearchbar={true}/>
             </div>
             <div className="blacklist-content">

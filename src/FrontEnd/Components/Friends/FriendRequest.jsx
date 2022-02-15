@@ -31,7 +31,7 @@ const FriendRequest = ({user , refresh}) => {
 
     useEffect(()=>{
         user.PendingReceive.forEach((key, index)=>{
-            axios.get(`${localStorage.getItem('localhost')}/user/getfriend/${key._id}`)
+            axios.get(`${localStorage.getItem('url')}/user/getfriend/${key._id}`)
             .then((response)=>{
                 setRequests(prevState => [...prevState, response.data.response])
             }).catch((err)=>{
@@ -39,6 +39,8 @@ const FriendRequest = ({user , refresh}) => {
                     if(err.response.data.message === "Access Token Expired"){
                         refresh();
                     }
+                }else{
+                    console.log(err.response);
                 }
             })
         })
@@ -47,7 +49,7 @@ const FriendRequest = ({user , refresh}) => {
  
     const accept = (id)=>{
         // console.log(id)
-        axios.post(`${localStorage.getItem('localhost')}/user/addfriend/${id}`,
+        axios.post(`${localStorage.getItem('url')}/user/addfriend/${id}`,
         {
             id : id
         }, {
@@ -63,12 +65,12 @@ const FriendRequest = ({user , refresh}) => {
                 window.location.reload();
             }, 1000)
         }).catch((err)=>{
-            console.log(err)
+            console.log(err.response);
         })
     }
 
     const reject = (id)=>{
-        axios.post(`${localStorage.getItem('localhost')}/user/removepending/${id}`,
+        axios.post(`${localStorage.getItem('url')}/user/removepending/${id}`,
         {
             id : id
         }, {
@@ -84,7 +86,7 @@ const FriendRequest = ({user , refresh}) => {
                 window.location.reload();
             }, 1000)
         }).catch((err)=>{
-            console.log(err)
+            console.log(err.response)
         })
     }
 
@@ -110,7 +112,7 @@ const FriendRequest = ({user , refresh}) => {
                     <div className="friends-card" key={index}>
                         <div className="friends-avatar">
                             <div className="friends-avatar-container">
-                                <img src={`${localStorage.getItem('localhost')}/user/getavatar/${key._id}`} alt="avatar" />
+                                <img src={`${localStorage.getItem('url')}/user/getavatar/${key._id}`} alt="avatar" />
                             </div>
                         </div>
                         <div className="friends-name">

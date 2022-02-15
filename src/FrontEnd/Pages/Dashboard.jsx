@@ -134,13 +134,13 @@ const Dashboard = ({user, logout}) => {
     // add user Currency
     const addpoint = async (amount)=>{
         //check if the other user is loggedIn
-        await axios.get(`${localStorage.getItem("localhost")}/online/checktoken` , {
+        await axios.get(`${localStorage.getItem("url")}/online/checktoken` , {
             headers : {
                 Authorization : 'Bearer ' + localStorage.getItem('refreshToken')
             }
         }).then((response)=>{
             // add point
-            axios.post(`${localStorage.getItem("localhost")}/user/addpoint` , {
+            axios.post(`${localStorage.getItem("url")}/user/addpoint` , {
                 Amount : amount
             },{
                 headers : {
@@ -149,11 +149,13 @@ const Dashboard = ({user, logout}) => {
             }).then((response)=>{
                 setCurrency(response.data.user.Currency);
             }).catch((err)=>{
-                console.log(err);
+                console.log(err.response);
             })
         }).catch((err)=>{
             if(err.response.status === 401){
                 handleOpen();
+            }else{
+                console.log(err.response);
             }
         })
        
@@ -161,12 +163,12 @@ const Dashboard = ({user, logout}) => {
 
     // subtract user currency
     const subtractpoint = async (amount) =>{
-        await axios.get(`${localStorage.getItem("localhost")}/online/checktoken` , {
+        await axios.get(`${localStorage.getItem("url")}/online/checktoken` , {
             headers : {
                 Authorization : 'Bearer ' + localStorage.getItem('refreshToken')
             }
         }).then((response)=>{
-            axios.post(`${localStorage.getItem("localhost")}/user/subtractpoint` , {
+            axios.post(`${localStorage.getItem("url")}/user/subtractpoint` , {
                 Amount : amount
             }, {
                 headers : {
@@ -175,11 +177,13 @@ const Dashboard = ({user, logout}) => {
             }).then((response)=>{
                 setCurrency(response.data.user.Currency);
             }).catch((err)=>{
-                console.log(err);
+                console.log(err.response);
             })
         }).catch((err)=>{
             if(err.response.status === 401){
                 handleOpen()
+            }else{
+                console.log(err.response);
             }
         })
     }

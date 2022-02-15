@@ -11,7 +11,7 @@ const Blacklisted = ({user, refresh}) => {
 
     useEffect(()=>{
         user.Blacklisted.forEach((key, index)=>{
-            axios.get(`${localStorage.getItem('localhost')}/user/getfriend/${key._id}`)
+            axios.get(`${localStorage.getItem('url')}/user/getfriend/${key._id}`)
             .then((response)=>{
                 setShowBlacklisted(prevState => [ ...prevState , response.data.response])
             }).catch((err)=>{
@@ -19,6 +19,8 @@ const Blacklisted = ({user, refresh}) => {
                     if(err.response.data.message === "Access Token Expired"){
                         refresh()
                     }
+                }else{
+                    console.log(err.response);
                 }
             })
         
@@ -34,7 +36,7 @@ const Blacklisted = ({user, refresh}) => {
                 <div className="friends-card" key={index} onClick={()=>{window.location.href=`/users/${key.Username}`}}>
                     <div className="friends-avatar">
                         <div className="friends-avatar-container">
-                            <img src={`${localStorage.getItem('localhost')}/user/getavatar/${key._id}`} alt="avatar" />
+                            <img src={`${localStorage.getItem('url')}/user/getavatar/${key._id}`} alt="avatar" />
                         </div>
                     </div>
                     <div className="friends-name">

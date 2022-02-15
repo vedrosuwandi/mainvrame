@@ -8,10 +8,11 @@ import InfoIcon from '@mui/icons-material/Info';
 import PeopleIcon from '@mui/icons-material/People';
 import PersonIcon from '@mui/icons-material/Person';
 import NotInterestedOutlinedIcon from '@mui/icons-material/NotInterestedOutlined';
+import BookIcon from '@mui/icons-material/Book';
 
 import SidebarItem from './SidebarItem';
 
-const SidebarMenu = ({toggleDrawer}) => {
+const SidebarMenu = ({toggleDrawer, user}) => {
 
     return (   
       <Box
@@ -29,7 +30,8 @@ const SidebarMenu = ({toggleDrawer}) => {
             <SidebarItem icon={<PeopleIcon />} text="Friends" target="/friends" />
             <SidebarItem icon={<NotInterestedOutlinedIcon />} text="Blacklist" target="/blacklist" />
             <SidebarItem icon={<PersonIcon />} text="Profile" target="/profile" />
-            <SidebarItem icon={<InfoIcon />} text="About" target="/dashboard" />
+            <SidebarItem icon={<BookIcon />} text="Blogs" target={`/users/${user.Username}`} />
+            <SidebarItem icon={<InfoIcon />} text="About" target="http://omnivr.co" />
         </List>
       </Box> 
     );

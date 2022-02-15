@@ -1,0 +1,33 @@
+.conversation-container{
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    cursor: pointer;
+
+}
+
+.conversation-container:hover{
+    background-color: aliceblue;
+}
+
+.conversation-container.selected{
+    background-color: aliceblue;
+}
+
+.conversation-avatar{
+    width: 40px;
+    height: 40px;
+    border-radius: 50% ;
+    object-fit: cover;
+    margin-right: 20px;
+    border: 2px solid black;
+}
+
+.conversation-name{
+    flex: 5;
+    font-weight: 500;
+}
+
+.conversation-more{
+    flex: 1;
+}

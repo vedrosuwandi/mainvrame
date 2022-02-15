@@ -3,10 +3,17 @@ import {Button, Form} from 'react-bootstrap';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 
+import GoogleLogin from 'react-google-login';
+import FacebookLogin from 'react-facebook-login';
+
+import Divider from '@mui/material/Divider';
 import TextField  from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import { IconButton } from '@material-ui/core';
 import * as Icons from 'react-icons/ai';
+
+import GoogleIcon from '@mui/icons-material/Google';
+import FacebookIcon from '@mui/icons-material/Facebook';
 
 import './LoginForm.css';
 import ResetDialog from '../Dialog/ResetDialog';
@@ -34,27 +41,28 @@ const LoginForm = () => {
     //calls the API request (login)
     const login = async (event)=>{
         event.preventDefault();
-        await axios.post(`${localStorage.getItem("localhost")}/auth/login`, {
+        await axios.post(`${localStorage.getItem("url")}/auth/login`, {
             "Username" : username,
             "Password" : password
         }).then((response) => {
-            if (!response.data.auth) {
+           
+            setIsPassTrue(true);
+            //store the token in the local storage
+            Cookies.set("token" , response.data.token);
+            localStorage.setItem("refreshToken" , response.data.refreshToken);
+            //Go to Home page
+            window.location.href='/dashboard';
+            
+        }).catch((err)=>{
+            if(err.response.status === 401){
                 setIsPassTrue(false);
-                if(response.data.message === "User has not Verified!"){
+                if(err.response.data.message === "User has not Verified!"){
                     // alert("Please Verify Your Email")
                     setIsPassTrue(true);
-                    console.log(response);
-                    window.location.href=`verify/${response.data.user._id}`
+                    // console.log(response);
+                    window.location.href=`verify/${err.response.data.user._id}`
                 }
                 return
-            }else{
-                setIsPassTrue(true);
-                //store the token in the local storage
-                Cookies.set("token" , response.data.token);
-                localStorage.setItem("refreshToken" , response.data.refreshToken);
-                //Go to Home page
-                window.location.href='/dashboard';
-                
             }
         })
     }
@@ -79,23 +87,68 @@ const LoginForm = () => {
     };
 
    const sendlink =  async ()=>{
-        await axios.post(`${localStorage.getItem("localhost")}/user/sendlink`, {
+        await axios.post(`${localStorage.getItem("url")}/user/sendlink`, {
             "Email" : email
         })
         .then((response)=>{
             // console.log(email)
-            if(response.data.message === "No User found"){
+            setIsExist(true);
+        }).catch((err)=>{
+            if(err.response.status === 404){
                 setIsExist(false);
             }else{
-                setIsExist(true);
+                console.log(err.response);
             }
-
-        }).catch((err)=>{
-            console.log(err);
         })
     }
 
+    // if client login successfully using google
+    const GoogleSuccess = async (res) =>{
+        console.log(res)
+        await axios.post(`${localStorage.getItem('url')}/auth/googlelogin`, {
+            tokenID : res.tokenId
+        }).then((response)=>{
+            if(response.status === 200 ){
+                if(response.data.auth){
+                    //store the token in the local storage
+                    Cookies.set("token" , response.data.token);
+                    localStorage.setItem("refreshToken" , response.data.refreshToken);
+                    //Go to Home page
+                    window.location.href='/dashboard';
+                }
+            }
+        }).catch((err)=>{
+            console.log(err.response)
+        })
+    }
 
+    const GoogleFailure = (res) =>{
+        console.log(res)
+    }
+
+    const FacebookSuccess = (res) =>{
+        console.log(res)
+        axios.post(`${localStorage.getItem('url')}/auth/facebooklogin` , {
+            AccessToken : res.accessToken,
+            userID : res.userID
+        }).then((response)=>{    
+            if(response.status === 200 ){
+                if(response.data.auth){
+                    //store the token in the local storage
+                    Cookies.set("token" , response.data.token);
+                    localStorage.setItem("refreshToken" , response.data.refreshToken);
+                    //Go to Home page
+                    window.location.href='/dashboard';
+                }
+            }
+        }).catch((err)=>{
+
+        })
+    }
+
+    const FacebookFailure = (res) =>{
+        console.log(res)
+    }
 
     return (
         <div className="loginform-container">
@@ -149,6 +202,44 @@ const LoginForm = () => {
                             </a>
                         </span>
                     </p>
+                </div>
+                <Divider variant="middle" > 
+                    OR
+                </Divider>
+                <div className="loginform-oauth">
+                    <div className="loginform-google">
+                        <GoogleLogin 
+                            clientId='129620558915-e56ske4p4huda94rbcvbgrtmsv04ojb5.apps.googleusercontent.com'
+                            render={(renderProps)=>{
+                                return(
+                                    <IconButton 
+                                        aria-label="google"
+                                        onClick = {renderProps.onClick}
+                                       
+                                    >
+                                        <GoogleIcon />
+                                    </IconButton>
+                                )
+                            }}
+                            onSuccess={GoogleSuccess}
+                            onFailure={GoogleFailure}
+                        />
+                    </div> 
+                    <div className="loginform-facebook">
+                        <FacebookLogin
+                            appId='1346277049134921'
+                            autoLoad = {false}
+                            callback={FacebookSuccess}
+                            onFailure={FacebookFailure}
+                            textButton= ''
+                            cssClass='facebook-button'
+                            icon= {
+                                <IconButton >
+                                    <FacebookIcon />
+                                </IconButton>
+                            }
+                        />   
+                    </div>
                 </div>
                 <div className="loginform-back">
                     <Button id="back-button" href="/">

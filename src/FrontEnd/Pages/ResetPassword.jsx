@@ -43,7 +43,7 @@ const ResetPassword = () => {
         if(password !== confirmPass){
             setChanged(false);
         }else{
-            axios.post(`${localStorage.getItem("localhost")}/user/reset/${code}`,{
+            axios.post(`${localStorage.getItem("url")}/user/reset/${code}`,{
                 "Password" : password
             })
             .then((response)=>{
@@ -51,7 +51,7 @@ const ResetPassword = () => {
                 setPassword("");
                 setConfirmPass("");
             }).catch((err)=>{
-                console.log(err);
+                console.log(err.response);
             })
         }
     }

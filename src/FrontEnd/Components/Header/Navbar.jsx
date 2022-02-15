@@ -107,7 +107,7 @@ const Navbar = ({user, logout, showSearchbar}) => {
 
     const [hidden, setHidden] = useState();
     const hiddenChange = (event) => {
-      axios.post(`${localStorage.getItem('localhost')}/online/sethidden/${user.Username}`,
+      axios.post(`${localStorage.getItem('url')}/online/sethidden/${user.Username}`,
       {
         State : event.target.checked
       }).catch((err)=>{
@@ -118,7 +118,7 @@ const Navbar = ({user, logout, showSearchbar}) => {
     };
 
     useEffect(()=>{
-        axios.get(`${localStorage.getItem('localhost')}/online/checkhidden/${user.Username}`)
+        axios.get(`${localStorage.getItem('url')}/online/checkhidden/${user.Username}`)
         .then((response)=>{
           setHidden(response.data.Hidden);
         }).catch((err)=>{
@@ -231,9 +231,11 @@ const Navbar = ({user, logout, showSearchbar}) => {
       window.location.href = `/users/${value}`;
     }
 
-    return ( 
-        <div className="nav-container">  
-         <Box sx={{ flexGrow: 1 }}>
+   
+   
+    return (
+        <div className="nav-container" >  
+          <Box sx={{ flexGrow: 1 }}>
             <AppBar position="static" style={{ background: '#000000' }}>
                 <Toolbar>
                     <IconButton
@@ -253,7 +255,7 @@ const Navbar = ({user, logout, showSearchbar}) => {
                       open={openSidebar['left']}
                       onClose={toggleDrawer('left', false)}
                     >
-                      <SideBarMenu toggleDrawer={toggleDrawer('left', openSidebar)} />
+                      <SideBarMenu toggleDrawer={toggleDrawer('left', openSidebar)} user={user} />
                     </SwipeableDrawer>
 
                     
@@ -286,6 +288,9 @@ const Navbar = ({user, logout, showSearchbar}) => {
                             edge="end"
                             aria-label="home-nav"
                             color="inherit"
+                            onClick={ () => 
+                              window.location.href = '/friends/chat'
+                            }
                         >
                             <Badge badgeContent={0} color="error">
                               <ChatIcon />
@@ -323,7 +328,7 @@ const Navbar = ({user, logout, showSearchbar}) => {
                             <Typography>
                                 {user.Name} &nbsp;
                             </Typography>
-                              <Avatar src={`${localStorage.getItem('localhost')}/user/getavatar/${user._id}`} alt="avatar" />
+                              <Avatar src={user.Avatar?.GoogleAvatar ? user.Avatar.GoogleAvatar : `${localStorage.getItem('url')}/user/getavatar/${user._id}`} alt="avatar"   />
                         </IconButton>
                     </Box>
                      
@@ -336,7 +341,7 @@ const Navbar = ({user, logout, showSearchbar}) => {
                         onClick={handleMobileMenuOpen}
                         color="inherit"
                         >
-                            <Avatar src={`${localStorage.getItem('localhost')}/user/getavatar/${user._id}`} alt="avatar" />
+                            <Avatar src={user.Avatar?.GoogleAvatar ? user.Avatar.GoogleAvatar : `${localStorage.getItem('url')}/user/getavatar/${user._id}`} alt="avatar"  />
                         </IconButton>
                     </Box>
                     

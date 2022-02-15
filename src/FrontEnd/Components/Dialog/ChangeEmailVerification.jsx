@@ -43,7 +43,7 @@ const ChangeEmailVerification = ({ open,  handleClose, email }) => {
 
    
     const UpdateEmail = () =>{
-        axios.post(`${localStorage.getItem('localhost')}/user/changeemail` , {
+        axios.post(`${localStorage.getItem('url')}/user/changeemail` , {
             Email : email,
             Code : code,
         },{
@@ -51,23 +51,23 @@ const ChangeEmailVerification = ({ open,  handleClose, email }) => {
                 Authorization : "Bearer " + Cookies.get('token')
             }
         }).then((response)=>{
-            if(!response.data.success){
-                setAlert(false);
-                setAlertText(response.data.message);
-            }else{
-                setAlert(true);
-                setAlertText(response.data.message);
-                window.location.reload();
-            }
+            setAlert(true);
+            setAlertText(response.data.message);
+            window.location.reload();
         }).catch((err)=>{
-            console.log(err)
+            if(err.response.status === 401){
+                setAlert(false);
+                setAlertText(err.response.data.message);
+            }else{
+                console.log(err.response);
+            }
         })
     }
 
   
     /*Send Email and Verify*/
     const sendVerifyEmail = (email) =>{
-        axios.post(`${localStorage.getItem('localhost')}/verify/changeemailcode`, {
+        axios.post(`${localStorage.getItem('url')}/verify/changeemailcode`, {
             Email : email
         }).then((response)=>{
             setCount(30)

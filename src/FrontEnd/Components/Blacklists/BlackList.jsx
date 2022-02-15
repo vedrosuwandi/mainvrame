@@ -54,7 +54,7 @@ const BlackList = ({user, refresh}) => {
   
     /* Cancel Blacklist Function */
     const reverseBlacklist = async (id) =>{
-        await axios.post(`${localStorage.getItem('localhost')}/user/reverseblacklist`, {
+        await axios.post(`${localStorage.getItem('url')}/user/reverseblacklist`, {
             ID : id
         }, {
             headers : {
@@ -79,7 +79,7 @@ const BlackList = ({user, refresh}) => {
       /*Check User is online or not and append it on friendDetails array */
     const checkOnline = async () =>{  
         const request =  showblacklist.forEach((key, index)=>{
-          axios.get(`${localStorage.getItem('localhost')}/online/checkstatus/${key.Username}`)
+          axios.get(`${localStorage.getItem('url')}/online/checkstatus/${key.Username}`)
           .then((response)=>{
             // console.log(response.data)
             // console.log(index)
@@ -139,7 +139,7 @@ const BlackList = ({user, refresh}) => {
 
     useEffect(()=>{
         user.Blacklist.forEach((key, index)=>{
-            axios.get(`${localStorage.getItem('localhost')}/user/getfriend/${key._id}`)
+            axios.get(`${localStorage.getItem('url')}/user/getfriend/${key._id}`)
             .then((response)=>{
                 setShowBlacklist(prevState => [ ...prevState , response.data.response])
             }).catch((err)=>{
@@ -147,6 +147,8 @@ const BlackList = ({user, refresh}) => {
                     if(err.response.data.message === "Access Token Expired"){
                         refresh()
                     }
+                }else{
+                    console.log(err.response);
                 }
             })
         
@@ -156,7 +158,7 @@ const BlackList = ({user, refresh}) => {
     
 
     useEffect( ()=>{
-        axios.get(`${localStorage.getItem('localhost')}/user/countblacklist`,{
+        axios.get(`${localStorage.getItem('url')}/user/countblacklist`,{
             headers :{
                 Authorization : "Bearer " + Cookies.get('token')
             }
@@ -195,7 +197,7 @@ const BlackList = ({user, refresh}) => {
                     <div className="friends-card" key={index} onClick={()=>{window.location.href=`/users/${key.Username}`}}>
                         <div className="friends-avatar">
                             <div className="friends-avatar-container" style={{ borderColor :  key.Online === "hidden" ? "grey" : key.Online ? "green" : "red" }}>
-                                <img src={`${localStorage.getItem('localhost')}/user/getavatar/${key._id}`} alt="avatar" />
+                                <img src={`${localStorage.getItem('url')}/user/getavatar/${key._id}`} alt="avatar" />
                             </div>
                         </div>
                         <div className="friends-name">

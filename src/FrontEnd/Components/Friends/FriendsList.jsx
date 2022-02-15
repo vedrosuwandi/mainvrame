@@ -121,9 +121,15 @@ const FriendsList = ({user , refresh}) => {
         )
     }
 
+    
+    // const deleteConversation = (id) =>{
+        
+    // }
+
+
     /* Blacklist Friend */
     const blacklist = async (id) =>{
-        await axios.post(`${localStorage.getItem('localhost')}/user/blacklist`, {
+        await axios.post(`${localStorage.getItem('url')}/user/blacklist`, {
             ID : id
         }, {
             headers : {
@@ -141,12 +147,14 @@ const FriendsList = ({user , refresh}) => {
                 if(err.response.data.message === "Access Token Expired"){
                     refresh();
                 }
+            }else{
+                console.log(err.response);
             }
         })
     }
     
     const deletefriend = ()=>{
-        axios.post(`${localStorage.getItem('localhost')}/user/removefriend/${ID}`, {
+        axios.post(`${localStorage.getItem('url')}/user/removefriend/${ID}`, {
             id : ID
         }, {
             headers : {
@@ -165,6 +173,8 @@ const FriendsList = ({user , refresh}) => {
                 if(err.response.data.message === "Access Token Expired"){
                     refresh();
                 }
+            }else{
+                console.log(err.response)
             }
         })
     }
@@ -172,7 +182,7 @@ const FriendsList = ({user , refresh}) => {
     /* Check the user is online or not and append it on another array*/
     const checkOnline = async () =>{  
         const request =  showfriends.forEach((key, index)=>{
-          axios.get(`${localStorage.getItem('localhost')}/online/checkstatus/${key.Username}`)
+          axios.get(`${localStorage.getItem('url')}/online/checkstatus/${key.Username}`)
           .then((response)=>{
             // console.log(response.data)
             // console.log(index)
@@ -210,7 +220,7 @@ const FriendsList = ({user , refresh}) => {
     const ItemLimit = 6;
     //Current Page
     const [page, setPage] = useState(1);
-    // Set the Maximum Number of Page 
+   
 
     const changePage = (event, value)=>{
       setPage(value);
@@ -220,7 +230,7 @@ const FriendsList = ({user , refresh}) => {
     useEffect(()=>{
         user.Friends.forEach((key, index)=>{
             if(!key.Blacklist){
-                axios.get(`${localStorage.getItem('localhost')}/user/getfriend/${key._id}`)
+                axios.get(`${localStorage.getItem('url')}/user/getfriend/${key._id}`)
                 .then((response)=>{
                     setShowFriends(prevState => [ ...prevState , response.data.response])
                 }).catch((err)=>{
@@ -228,6 +238,8 @@ const FriendsList = ({user , refresh}) => {
                         if(err.response.data.message === "Access Token Expired"){
                             refresh();
                         }
+                    }else{
+                        console.log(err.response);
                     }
                 })
             }
@@ -238,7 +250,7 @@ const FriendsList = ({user , refresh}) => {
 
 
     useEffect(()=>{
-        axios.get(`${localStorage.getItem('localhost')}/user/countblacklistfriend`,{
+        axios.get(`${localStorage.getItem('url')}/user/countblacklistfriend`,{
             headers :{
                 Authorization : "Bearer " + Cookies.get('token')
             }
@@ -256,20 +268,55 @@ const FriendsList = ({user , refresh}) => {
          // eslint-disable-next-line
     }, [showfriends])
 
+    // Visible Paginate
+    const VisiblePaginate = ()=>{
+        if (details.length >= ItemLimit){
+            return true
+        }else{
+            return false
+        }
+    }
 
     return ( 
         <>
             <div className="FriendListMenu" style={{display: "flex" , justifyContent:"flex-end"}}>
-                <IconButton
-                size="small"
-                edge="start"
-                color="primary"
-                title="Sort FriendList"
-                aria-expanded={openSortMenu ? 'true' : undefined}
-                onClick={handleOpenSortMenu}
+                <Stack
+                    spacing={2}
+                    direction="row"
                 >
-                    <SortIcon style={{ transform: "rotate(180deg)" }}/>
-                </IconButton>
+                    <IconButton
+                        size="medium"
+                        edge="start"
+                        color="primary"
+                        aria-label="open drawer"
+                        sx={{
+                            mr:{
+                                sm : '20px',
+                                xs : '0px'
+                            },
+                            
+                        }}
+                        title="Chat"
+                        onClick={(event)=>{
+                            event.stopPropagation();
+                            // setCurrentChat(key);
+                            window.location.href = '/friends/chat';
+                        }}
+                    >
+                        
+                        <ChatIcon id="action-icon-chat" fontSize="small" />
+                    </IconButton>
+                    <IconButton
+                        size="small"
+                        edge="start"
+                        color="primary"
+                        title="Sort FriendList"
+                        aria-expanded={openSortMenu ? 'true' : undefined}
+                        onClick={handleOpenSortMenu}
+                    >
+                        <SortIcon style={{ transform: "rotate(180deg)" }}/>
+                    </IconButton>
+                </Stack>
             </div>
             {
                 status === null ?
@@ -283,12 +330,15 @@ const FriendsList = ({user , refresh}) => {
                 <Alert severity="success">{`${message}`}</Alert>
             }
     
-            {details.map((key, index)=>{
+            {details
+            // slice the array from the range from page * Total limit  
+            .slice((page - 1) * ItemLimit, page * ItemLimit)
+            .map((key, index)=>{
                 return(
                     <div className="friends-card" key={index} onClick={()=>{window.location.href=`users/${key.Username}`}} >
                         <div className="friends-avatar">
                             <div className="friends-avatar-container" style={{ borderColor :  key.Online === "hidden" ? "grey" : key.Online ? "green" : "red" }}>
-                                <img src={`${localStorage.getItem('localhost')}/user/getavatar/${key._id}`} alt="avatar" />
+                                <img src={`${localStorage.getItem('url')}/user/getavatar/${key._id}`} alt="avatar" />
                             </div>
                         </div>
                         <div className="friends-name">
@@ -296,7 +346,7 @@ const FriendsList = ({user , refresh}) => {
                         </div>
                         <div className="friends-action">
                             <Stack spacing={1} direction="row">
-                                <div className="friends-chat">
+                                {/* <div className="friends-chat">
                                     <IconButton
                                         size="medium"
                                         edge="start"
@@ -312,12 +362,14 @@ const FriendsList = ({user , refresh}) => {
                                         title="Chat"
                                         onClick={(event)=>{
                                             event.stopPropagation();
+                                            // setCurrentChat(key);
+                                            window.location.href = '/friends/chat';
                                         }}
                                     >
                                         
                                         <ChatIcon id="action-icon-chat" />
                                     </IconButton>
-                                </div>
+                                </div> */}
                                 <div className="friends-blacklist">
                                     <IconButton
                                         size="medium"
@@ -368,17 +420,20 @@ const FriendsList = ({user , refresh}) => {
                     </div>
                 )
             })}
-            <div className="friendlist-paginate" style={{bottom : "0" , position:"absolute", width:"95%"}}>
+            <div className="friendlist-paginate" style={{bottom : "0" , width:"95%", whiteSpace:"nowrap", display: VisiblePaginate() ? 'flex' : 'none' }}>
                 <Divider />
                 <div className="friendlist-paginate-wrapper" style={{display : "flex" , justifyContent:"center"}}>
                     <Pagination 
                         variant="outlined" 
                         page={page}
+                        // Set the Maximum Number of Page 
                         // Ceil - to round the number into the high nearest integer
                         count={Math.ceil(details.length / ItemLimit)}
                         onChange={changePage}
                         defaultPage={1}
                         size='medium'
+                        showFirstButton
+                        showLastButton
                     />
                 </div>
             </div>
@@ -401,6 +456,7 @@ const FriendsList = ({user , refresh}) => {
                     handleCloseSortMenu()
                 }}>Z - A Descending</MenuItem>
             </Menu>
+
             {/* Dialog for Blacklist */}
             <ActionDialog open={openBlacklistDialog} handleClose={handleCloseBlacklist} message={`Do you want to Blacklist ${name}`} action={()=>blacklist(ID)} />
             {/* Dialog for Remove */}

@@ -4,14 +4,14 @@
     /* border: 1px solid black; */
 }
 
-.profiledetails-username, .profiledetails-email, .profiledetails-phone{
+.profiledetails-username, .profiledetails-email, .profiledetails-phone, .profiledetails-dob{
     display: flex;
     align-items: center;
     font-size: 20px;
     /* border: 1px solid black; */
 }
 
-.profiledetails-email, .profiledetails-phone, .profiledetails-actions{
+.profiledetails-email, .profiledetails-phone, .profiledetails-actions, .profiledetails-dob{
     margin-top: 15px;
     font-size: 20px;
 }
@@ -65,7 +65,7 @@
         /* border: 1px solid black; */
     }
 
-    .profiledetails-email, .profiledetails-phone, .profiledetails-actions, .profiledetails-logout{
+    .profiledetails-email, .profiledetails-phone,.profiledetails-dob, .profiledetails-actions, .profiledetails-logout{
         margin-top: 10px;
         font-size: 15px;
     }

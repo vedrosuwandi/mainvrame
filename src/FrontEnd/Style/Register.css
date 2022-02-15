@@ -19,13 +19,22 @@
 }
 
 .register-content{
-    justify-content: center;
+    display: flex;
     align-items: center;
+    justify-content: center;
     flex: 1;
 }
 
 
 @media only screen and (max-width : 900px) {
+    .register-title{
+        margin-top: 3%;
+    }
+    .register-content{
+        padding-top: 3%;
+        display: flex;
+        justify-content: center;
+    }
     .register-wrapper{
         display: block;
     }

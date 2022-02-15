@@ -85,8 +85,6 @@ p{
 }
 
 
-
-
 #back-button{
 	background-color: transparent;
 	color: black;
@@ -97,6 +95,16 @@ p{
 #back-button:hover{
 	text-decoration: underline;
 	cursor: pointer;
+}
+
+.loginform-oauth{
+	display: flex;
+	justify-content: space-evenly;
+}
+
+.facebook-button{
+	background-color: transparent;
+	border: none;
 }
 
 @media only screen and (max-width : 900px){
@@ -110,6 +118,7 @@ p{
 	}
 	
 } 
+
 
 
 @media only screen and (max-width : 425px){
